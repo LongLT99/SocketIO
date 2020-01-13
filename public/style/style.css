@@ -1,0 +1,124 @@
+/* * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font: 13px Helvetica, Arial;
+} */
+
+form {
+  padding: 3px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+form input {
+  background: rgb(241, 247, 244);
+  padding: 10px;
+  width: 70%;
+  margin-right: 0.5%;
+}
+
+form button {
+  width: 19%;
+  color: rgb(252, 249, 249);
+  background: rgb(72, 113, 202);
+  border: none;
+  padding: 10px;
+
+}
+
+#roomb{
+  padding: 8px;
+  color: rgb(255, 255, 255);
+  border: none;
+}
+
+#buton {
+  padding: 8px;
+  color: rgb(255, 255, 255);
+  border: none;
+}
+
+#inputuse {
+  width: 70%;
+  padding: 8px;
+  padding-bottom: 1px;
+}
+
+#online_user li {
+  padding: 5px 10px;
+}
+
+#room_name{
+  height: 40px;
+}
+#in_room{
+  height: 40px;
+}
+
+#refresh{
+  color: rgb(240, 234, 183);
+  background-color: rgb(56, 42, 107);
+  border: none;
+  height: 30px;
+}
+
+/* #online_user li:nth-child(odd){
+    background: #eee;
+  } */
+
+/* #messages {
+  
+  margin: 0;
+} */
+
+#messages li {
+  list-style-type: none;
+  padding: 5px 10px;
+}
+
+#messages li:nth-child(odd) {
+  background: #eee;
+}
+
+#privates li {
+  padding: 5px 10px;
+}
+
+#privates {
+  list-style-type: none;
+  margin: 0;
+}
+
+#privates li:nth-child(odd) {
+  background: #eee;
+}
+#cxbox{
+  background-color: rgb(63, 127, 211);
+  color: rgb(243, 242, 242);
+  padding: 15px;
+  text-align: center;
+}
+#onhead{
+  background-color: rgb(63, 127, 211);
+  color: rgb(243, 242, 242);
+  padding: 15px;
+  text-align: center;
+}
+#inhead{
+  background-color: rgb(40, 82, 138);
+  color: rgb(243, 242, 242);
+  padding: 15px;
+  text-align: center;
+}
+#myHeader {
+  background-color: rgb(12, 189, 243) ;
+  color: rgb(44, 25, 151);
+  padding: 20px;
+  width: 100%;
+  text-align: center;
+}

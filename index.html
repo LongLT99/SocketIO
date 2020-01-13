@@ -2,158 +2,51 @@
 <html>
 
 <head>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="style/style.css">
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
     crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
     integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
     crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
-  <title>Socket.IO chat</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+  <script src="bootstrap/js/bootstrap.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 
-    body {
-      font: 13px Helvetica, Arial;
-    }
-
-    form {
-      padding: 3px;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-    }
-
-    form input {
-      background: rgb(241, 247, 244);
-      padding: 10px;
-      width: 70%;
-      margin-right: .5%;
-    }
-
-    form button {
-      width: 19%;
-      background: rgb(241, 169, 61);
-      border: none;
-      padding: 10px;
-    }
-
-    #buton {
-      color: rgb(250, 250, 250);
-      background-color: rgb(61, 14, 233);
-      width: 10%;
-      padding: 8px;
-      border: none
-    }
-
-    #inputuse {
-      width: 25%;
-      padding: 8px;
-    }
-
-    #online_user li {
-      padding: 5px 10px;
-    }
-
-    /* #online_user li:nth-child(odd){
-      background: #eee;
-    } */
-
-    #messages {
-      list-style-type: none;
-      margin: 0;
-    }
-
-    #messages li {
-      padding: 5px 10px;
-    }
-
-    #messages li:nth-child(odd) {
-      background: #eee;
-    }
-
-    #myHeader {
-      background-color: lightblue;
-      color: rgb(236, 17, 17);
-      padding: 20px;
-      width: 1550px;
-      text-align: center;
-    }
-  </style>
 </head>
-<script src="/socket.io/socket.io.js"></script>
-<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-<script>
-  $(function () {
-    var socket = io();
-    $('form').submit(function (e) {
-      e.preventDefault(); // prevents page reloading
-      socket.emit('chat message', $('#m').val());
-      socket.emit('disconnect', $('#inputuse').val());
-      $('#m').val('');
-      return false;
-    });
 
-    $('#buton').click(function () {// user name
-      socket.emit('setSocketId',{ data: { name: $("#inputuse").val(), userId: socket.id }});
-      socket.emit('changeuser', { username: $("#inputuse").val() })
-      $('#online_user').append('<li class="list-group-item">' + $("#inputuse").val());
-    });
-    socket.on('changeuser', function (data) {// connect user
-      $('#messages').append('<li>' + data.user + ' is connect');
-      socket.on('update', function (list) {
-        $('#online_user').empty();
-        $.each(list, function (username) {
-          $('#online_user').append('<li>' + username);
-        });
-      });
-    });
-    socket.on('leave', function (list) {
-      console.log('Blo')
-      $('#messages').append('<li>' + list.user + ' is disconnect');
-    });
-    socket.on('changeuser', function (list) {
-      socket.on('update', function (list) {
-        $('#inboxuser').empty();
-        $('#inboxuser').append('<option>' + 'chat room' + '</option>');
-        $.each(list, function (username) {
-          $('#inboxuser').append('<option>' + username + '</option>');
-        });
-      });
-    });
-    socket.on('chat message', function (data) {
-      $('#messages').append('<li>' + data.username + ':' + data.msg);// send message
-      $('#box').scrollTop($('#box').height());
-    });
-  });
-</script>
-</script>
-
-<body class="colum">
+<body class="container-fluid">
+  <title>Socket.IOx chat</title>
   <div class="row">
     <h1 id="myHeader">Wellcome to box chat</h1>
   </div>
-  <input type="text" id="inputuse" /><button type="button" id="buton">Create and start</button>
+
+  <div class="row my-1">
+    <div class="colum col-5">
+      <!-- <input class="col-9" type="text" id="inputuse" /><button type="button" class="btn btn-primary col-2" id="buton">Create and start</button> -->
+      <input id="in_room" class="col-9">
+      <input type="button" id="buton" class="col-2  bg-primary" value="create user">
+    </div>
+    <div class="colum col-7">
+      <select id="room_name" class="col-5"></select>
+      <input id="in_room" class="col-4">
+      <input type="button" id="roomb" class="col-2 bg-primary text-center" value="create room">
+    </div>
+  </div>
+
   <div class="row">
     <div id="box" class="card col-8" style="height: 550px; border:none;">
-      <div class="card-header text-center">
+      <div id="cxbox" vclass="card-header text-center">
         Box chat
       </div>
-      <div class="card-body" style="overflow-y: scroll;">
+      <div id="cbox" class="card-body" style="overflow-y: scroll;">
         <ul id="messages"></ul>
       </div>
     </div>
     <div class="colum col-4">
       <div id="online" class="card" style="height: 200px;">
-        <div class="card-header text-center">
+        <div id="onhead" class="card-header text-center">
           Online user
         </div>
         <div class="card-body" style="overflow-y: scroll;">
@@ -161,15 +54,18 @@
         </div>
       </div>
       <div class="card" style="height: 350px;">
-        <div class="card-header">
+        <div id="inhead" class="card-header ">
           <div class="row">
-            <div class="colum col-10 text-center">InBox</div>
+            <div class="colum col-9 text-center">
+              InBox
+            </div>
             <div class="colum col-2">
-              <input type="button" value="refresh">
+              <input type="button" id="refresh" value="refresh">
             </div>
           </div>
         </div>
-        <div class="card-body" style="overflow-y: scroll;">
+        <div id="ibox" class="card-body" style="overflow-y: scroll;">
+          <ul id="privates"></ul>
         </div>
       </div>
     </div>
@@ -178,8 +74,74 @@
     <div class="row">
       <select class="col-8" id="inboxuser" style="width: 800px;padding: 5px 10px;">
     </div>
-    <input type="text" id="m" autocomplete="off" /><button>Send</button>
+    <input type="text" id="m" autocomplete="off" /><button >Send</button>
   </form>
+  <script>
+    $(function () {
+      var socket = io();
+      $('form').submit(function (e) {
+        if ($("#inboxuser option:selected").text() == 'chat room') {
+          e.preventDefault(); // prevents page reloading
+          socket.emit('chat message', $('#m').val());
+        }
+        else {
+          e.preventDefault(); // prevents page reloading
+          socket.emit('private message', $("#inboxuser option:selected").text(), $('#m').val());
+        }
+        if ($('#inputuse').val() == '') {
+          alert("Please enter your name");
+        }
+        socket.emit('disconnect', $('#inputuse').val());
+        $('#m').val('');
+        return false;
+      });
+
+      $('#buton').click(function () {// user name
+        if ($('#inputuse').val() == '') {
+          alert("Please enter your name");
+        }
+        else {
+          socket.emit('setSocketId', { name: $("#inputuse").val(), userId: socket.id });
+          socket.emit('changeuser', { username: $("#inputuse").val() })
+          $('#online_user').append('<li class="list-group-item">' + $("#inputuse").val());
+        }
+      });
+      $('#refresh').click(function(){
+        $('#ibox').empty();
+
+      })
+      socket.on('changeuser', function (data) {// connect user
+        $('#messages').append('<li>' + data.user + ' is connect');
+        socket.on('update', function (list) {
+          $('#online_user').empty();
+          $.each(list, function (username) {
+            $('#online_user').append('<li>' + username);
+          });
+        });
+      });
+      socket.on('leave', function (list) {
+        $('#messages').append('<li>' + list.user + ' is disconnect');
+      });
+      socket.on('changeuser', function (list) {
+        socket.on('update', function (list) {
+          $('#inboxuser').empty();
+          $('#inboxuser').append('<option>' + 'chat room' + '</option>');
+          $.each(list, function (username) {
+            $('#inboxuser').append('<option>' + username + '</option>');
+          });
+        });
+      });
+      socket.on('chat message', function (data) {
+        $('#messages').append('<li>' + data.username + ': ' + data.msg);// send message
+        $('#cbox').scrollTop($('#cbox').height());
+      });
+      socket.on('chat private', function (data, to) {
+        console.log(to.touser);
+        $('#privates').append('<li> from ' + data.username + ' to ' + to.touser + ': ' + data.msg);// send message
+        $('#ibox').scrollTop($('#ibox').height());
+      });
+    });
+  </script>
 </body>
 
 </html>
