@@ -25,6 +25,7 @@ io.on("connection", function(socket) {
   });
 
   socket.username = "guest";
+  
   socket.on("changeuser", function(data) {
     delete list[socket.username];
     delete ID[socket.username];

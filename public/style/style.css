@@ -1,4 +1,4 @@
-/* * {
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -6,7 +6,10 @@
 
 body {
   font: 13px Helvetica, Arial;
-} */
+  background: rgb(241, 247, 244);
+  background-image: url(../img/nen.jpg);
+  background-size: cover;
+}
 
 form {
   padding: 3px;
@@ -25,13 +28,12 @@ form input {
 form button {
   width: 19%;
   color: rgb(252, 249, 249);
-  background: rgb(72, 113, 202);
+  background: rgb(10, 24, 53);
   border: none;
   padding: 10px;
-
 }
 
-#roomb{
+#roomb {
   padding: 8px;
   color: rgb(255, 255, 255);
   border: none;
@@ -42,48 +44,64 @@ form button {
   color: rgb(255, 255, 255);
   border: none;
 }
+#m {
+  padding: 0px;
+}
 
 #inputuse {
   width: 70%;
   padding: 8px;
-  padding-bottom: 1px;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid #ffffff;
+  color: #fff;
+}
+::placeholder {
+  color: rgb(253, 253, 253);
 }
 
 #online_user li {
   padding: 5px 10px;
+  color: #fff;
+}
+/* #online_user li:nth-child(odd) {
+  background: #eee;
+} */
+
+#room_name {
+  height: 40px;
+  background-color: rgb(236, 235, 241,0.6);
+  border: groove rgb(127, 206, 230);
+}
+#in_room {
+  height: 40px;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid #ffffff;
+  color: #fff;
 }
 
-#room_name{
-  height: 40px;
-}
-#in_room{
-  height: 40px;
-}
-
-#refresh{
+#refresh {
   color: rgb(240, 234, 183);
   background-color: rgb(56, 42, 107);
   border: none;
   height: 30px;
+  width: 100%;
 }
 
-/* #online_user li:nth-child(odd){
-    background: #eee;
-  } */
-
-/* #messages {
-  
+#messages {
   margin: 0;
-} */
+}
 
 #messages li {
   list-style-type: none;
   padding: 5px 10px;
+  color: #fff;
 }
 
-#messages li:nth-child(odd) {
+/* #messages li:nth-child(odd) {
   background: #eee;
-}
+} */
 
 #privates li {
   padding: 5px 10px;
@@ -92,32 +110,51 @@ form button {
 #privates {
   list-style-type: none;
   margin: 0;
+  color: #fff;
 }
 
-#privates li:nth-child(odd) {
+/* #privates li:nth-child(odd) {
   background: #eee;
+} */
+#cbox {
+  overflow-y: scroll;
+  padding: 0;
+  background: rgb(241, 247, 244, 0.2);
+  height: 510px;
 }
-#cxbox{
+
+#cxbox {
   background-color: rgb(63, 127, 211);
   color: rgb(243, 242, 242);
   padding: 15px;
   text-align: center;
 }
-#onhead{
+#onhead {
   background-color: rgb(63, 127, 211);
   color: rgb(243, 242, 242);
   padding: 15px;
   text-align: center;
 }
-#inhead{
+#inhead {
   background-color: rgb(40, 82, 138);
   color: rgb(243, 242, 242);
   padding: 15px;
   text-align: center;
 }
+#ibox{
+  overflow-y: scroll;
+  height: 300px;
+  background-color:  rgb(19, 248, 248,0.3);
+}
+#inboxuser{
+  width: 65%; 
+  padding: 0px ;
+  background-color: rgb(236, 235, 241,0.8);
+  border: groove rgb(76, 128, 145);
+}
 #myHeader {
-  background-color: rgb(12, 189, 243) ;
-  color: rgb(44, 25, 151);
+  background-color: rgb(12, 189, 243,0.6);
+  color: rgb(211, 239, 250);
   padding: 20px;
   width: 100%;
   text-align: center;
