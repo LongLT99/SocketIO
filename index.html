@@ -107,8 +107,10 @@
           alert("please enter room's name");
         }
         else{
-          socket.emit('setRoom', { roomName: $('#in_room').val()});
+          alert("Wellcome to room");
+          socket.emit('setRoom', { roomName: $('#in_room').val(),username: $("#inputuse").val()});
         }
+        $('#in_room').val('');
       })
 
       $('#refresh').click(function () {
