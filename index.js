@@ -12,6 +12,9 @@ app.get("/", function(req, res) {
 });
 var list = {};
 var ID = {};
+var room = {};
+var mem = {};
+var roomID='';
 io.on("connection", function(socket) {
   io.emit("update", list);
   io.emit("getID", ID);
@@ -43,13 +46,30 @@ io.on("connection", function(socket) {
     ID[userName] = userId;
     // console.log(userName+" "+userId);
   });
+  socket.on("setRoom",function(data){
+        var RName = data.roomName;
+        if(room[data.roomName]== null){// chua co room
+          console.log("check1"+RName);
+          room[data.roomName]= data.roomName;
+          socket.join(data.roomName);
+          mem[RName]=socket.username;
+        }
+        else{
+          console.log("check2"+RName);
+          socket.join(data.roomName);
+          mem[RName]=socket.username;
+        }
+        console.log(RName);
+        roomID=room[data.roomName];   
+    
+      }) 
+
   socket.on("postname", function(data) {
     var toName = data.toname;
     // console.log(toName);
   });
-  socket.on("chat message", function(msg) {
-      io.emit("chat message", { msg: msg, username: socket.username });
-    // console.log("check"+ID[toname]);
+  socket.on("chat message 1", function(msg) {
+    io.to(roomID).emit("chat message", { msg: msg, username: socket.username });
   });
   socket.on("private message",function(toname,msg){
     io.to(ID[socket.username]).emit("chat private", {msg: msg, username: socket.username },{touser: toname});
