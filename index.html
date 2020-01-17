@@ -69,7 +69,7 @@
     <div class="row">
       <select class="colum" id="inboxuser">
     </div>
-    <input type="text" id="m" autocomplete="off" /><button>Send</button>
+    <input type="text" id="m" autocomplete="off" /><button type="button" class="send_button">Sent</button>
   </form>
   
   <script>
@@ -78,7 +78,7 @@
       $('form').submit(function (e) {
         if ($("#inboxuser option:selected").text() == 'chat room') {
           e.preventDefault(); // prevents page reloading
-          socket.emit('chat message 1', $('#m').val());
+          socket.emit('send_chat_mess_to_sever', $('#m').val());
         }
         else {
           e.preventDefault(); // prevents page reloading
@@ -138,7 +138,7 @@
       socket.on('leave', function (list) {
         $('#messages').append('<li>' + list.user + ' is disconnect');// disconnected user notication
       });
-      socket.on('chat message', function (data) {
+      socket.on('send_chat_mess_to_clien', function (data) {
         $('#messages').append('<li>' + data.username + ': ' + data.msg);// send message
         $('#cbox').scrollTop($('#cbox').height());
       });

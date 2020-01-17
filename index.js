@@ -14,7 +14,6 @@ var list = {};
 var ID = {};
 var room = {};
 var mem = {};
-var roomID='';
 io.on("connection", function(socket) {
   io.emit("update", list);
   io.emit("getID", ID);
@@ -50,26 +49,23 @@ io.on("connection", function(socket) {
   socket.on("setRoom",function(data){
         socket.RoomName = data.roomName;
         if(room[socket.RoomName]== null){// chua co room
-          console.log("check1"+socket.RoomName);
           room[data.roomName]= data.roomName;
           socket.join(data.roomName);
           mem[socket.RoomName]=data.username;
         }
         else{
-          console.log("check2"+socket.RoomName);
           room[socket.RoomName]=data.roomName;
           socket.join(data.roomName);
           mem[socket.RoomName]=data.username;
         }
-        console.log(socket.RoomName); 
       }) 
 
   // socket.on("postname", function(data) {
   //   var toName = data.toname;
   //   // console.log(toName);
   // });
-  socket.on("chat message 1", function(msg) {
-    io.to(room[socket.RoomName]).emit("chat message", { msg: msg, username: socket.username });
+  socket.on("send_chat_mess_to_sever", function(msg) {
+    io.to(room[socket.RoomName]).emit("send_chat_mess_to_clien", { msg: msg, username: socket.username });
   });
   socket.on("private message",function(toname,msg){
     io.to(ID[socket.username]).emit("chat private", {msg: msg, username: socket.username },{touser: toname});
