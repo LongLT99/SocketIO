@@ -4,8 +4,8 @@ var http = require("http").createServer(app);
 var io = require("socket.io")(http);
 var path = require("path");
 app.use(express.static("public"));
-app.use(express.static(path.join(__dirname, 'public')));
-app.set("public","");
+app.use(express.static(path.join(__dirname, "public")));
+app.set("public", "");
 
 app.get("/", function(req, res) {
   res.sendFile(__dirname + "/index.html");
@@ -28,7 +28,7 @@ io.on("connection", function(socket) {
 
   socket.username = "guest";
   socket.RoomName = "guest";
-  
+
   socket.on("changeuser", function(data) {
     delete list[socket.username];
     delete ID[socket.username];
@@ -46,31 +46,42 @@ io.on("connection", function(socket) {
     ID[userName] = userId;
     // console.log(userName+" "+userId);
   });
-  socket.on("setRoom",function(data){
-        socket.RoomName = data.roomName;
-        if(room[socket.RoomName]== null){// chua co room
-          room[data.roomName]= data.roomName;
-          socket.join(data.roomName);
-          mem[socket.RoomName]=data.username;
-        }
-        else{
-          room[socket.RoomName]=data.roomName;
-          socket.join(data.roomName);
-          mem[socket.RoomName]=data.username;
-        }
-      }) 
+  socket.on("setRoom", function(data) {
+    socket.RoomName = data.roomName;
+    if (room[socket.RoomName] == null) {
+      // chua co room
+      room[data.roomName] = data.roomName;
+      socket.join(data.roomName);
+      mem[socket.RoomName] = data.username;
+    } else {
+      room[socket.RoomName] = data.roomName;
+      socket.join(data.roomName);
+      mem[socket.RoomName] = data.username;
+    }
+  });
 
   // socket.on("postname", function(data) {
   //   var toName = data.toname;
   //   // console.log(toName);
   // });
   socket.on("send_chat_mess_to_sever", function(msg) {
-    io.to(room[socket.RoomName]).emit("send_chat_mess_to_clien", { msg: msg, username: socket.username });
+    io.to(room[socket.RoomName]).emit("send_chat_mess_to_clien", {
+      msg: msg,
+      username: socket.username
+    });
   });
-  socket.on("private message",function(toname,msg){
-    io.to(ID[socket.username]).emit("chat private", {msg: msg, username: socket.username },{touser: toname});
-    io.to(ID[toname]).emit("chat private", {msg: msg, username: socket.username },{touser: toname});
-  })
+  socket.on("private message", function(toname, msg) {
+    io.to(ID[socket.username]).emit(
+      "chat private",
+      { msg: msg, username: socket.username },
+      { touser: toname }
+    );
+    io.to(ID[toname]).emit(
+      "chat private",
+      { msg: msg, username: socket.username },
+      { touser: toname }
+    );
+  });
 });
 
 http.listen(3000, function() {

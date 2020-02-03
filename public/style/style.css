@@ -153,13 +153,21 @@ form input {
   margin-right: 0.5%;
 }
 
-form button {
-  width: 19%;
+#send_button {
+  width: 10%;
   color: rgb(252, 249, 249);
   background: rgb(10, 24, 53);
   border: none;
   padding: 10px;
 }
+#video_button {
+  width: 10%;
+  color: #fff;
+  background-color: blue;
+  padding-left: 10px;
+  border: none;
+}
+
 
 #m {
   padding: 0px;
