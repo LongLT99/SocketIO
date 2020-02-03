@@ -12,8 +12,6 @@
   <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
   <script src="bootstrap/js/bootstrap.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
-  <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-  <script src="client.js"></script>
 </head>
 
 <body class="container-fluid">
@@ -65,35 +63,42 @@
       </div>
     </div>
   </div>
+  
   <div class="modal" tabindex="-1" role="dialog" id="modal_id">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-xl"  role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Modal title</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="endvideo()">
+          <button type="button" id="endvideo" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body d-flex justify-content-center  ">
           <video id="local_video" width="400" autoplay playsinline></video>
+          <video id="user_video" width="400" autoplay playsinline></video>          
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
-  </div>
+  </div> 
+  <div>
   <form action="">
     <div class="row">
       <select class="colum" id="inboxuser">
-    </div>
     <input type="text" id="m" autocomplete="off" /><button type="button" id="send_button">Sent</button>
-    <button type="button" id="video_button" onclick="init()" data-toggle="modal" data-target="#modal_id">video call</button>
+    <button type="button" class="btn btn-info btn-lg"  id="video_button" data-toggle="modal" data-target="#modal_id" >video call</button>
+  </div>
   </form>
+</div>
 
   <script>
     $(function () {
       var socket = io();
+      $("#send_button").click(function(){
+        $('form').submit();
+      })
       $('form').submit(function (e) {
         if ($("#inboxuser option:selected").text() == 'chat room') {
           e.preventDefault(); // prevents page reloading
@@ -167,7 +172,10 @@
       });
     });
   </script>
-
+  <script src="https://unpkg.com/peerjs@1.0.0/dist/peerjs.min.js"></script>
+  <script src="client.js"></script>
+  <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+  
 </body>
 
 </html>
