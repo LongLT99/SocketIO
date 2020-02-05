@@ -10,13 +10,16 @@ app.set("public", "");
 app.get("/", function(req, res) {
   res.sendFile(__dirname + "/index.html");
 });
+
 var list = {};
 var ID = {};
 var room = {};
 var mem = {};
+var peerID;
 io.on("connection", function(socket) {
   io.emit("update", list);
   io.emit("getID", ID);
+  io.emit("getpeerID",peerID);
   socket.on("disconnect", function() {
     io.emit("leave", { user: socket.username });
     delete list[socket.username];
@@ -82,6 +85,9 @@ io.on("connection", function(socket) {
       { touser: toname }
     );
   });
+  socket.on('calling',function(target,peerID){
+    io.to(ID[target]).emit('answer_call',{username: socket.username},{ callID : peerID});
+  })
 });
 
 http.listen(3000, function() {

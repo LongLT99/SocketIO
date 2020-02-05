@@ -1,5 +1,5 @@
 const constraints = (window.constraints = {
-  audio: true,
+  audio: false,
   video: true
 });
 
@@ -36,12 +36,22 @@ function errorMsg(msg, error) {
 }
 
 async function init(e) {
-  try {
-    const streams = await navigator.mediaDevices.getUserMedia(constraints);
-    handleSuccess(streams);
-    e.target.disabled = true;
-  } catch (e) {
-    handleError(e);
+  if($("#inputuse").val()== ''){
+    alert("hey");    
+  }
+  else if($("#inputuse").val()==$("#inboxuser option:selected").text()||$("#inboxuser option:selected").text()=="chat room"){
+    alert("ayyyyyyyyyy ban eeeee");
+  }
+  else{
+    socket.emit('calling',$("#inboxuser option:selected").text(),peer.id);
+    $("#modal_id").modal();
+    // try {
+    //   const streams = await navigator.mediaDevices.getUserMedia(constraints);
+    //   handleSuccess(streams);
+    //   e.target.disabled = true;
+    // } catch (e) {
+    //   handleError(e);
+    // }
   }
 }
 const localvideo = document.querySelector("video#local_video");
@@ -51,19 +61,50 @@ if (vb) {
 }
 
 $("#modal_id").on("hidden.bs.modal", function() {
-    const stream = localvideo.srcObject;
-    const tracks = stream.getTracks();
-    tracks.forEach(function(track) {
-      track.stop();
+  const stream = localvideo.srcObject;
+  const tracks = stream.getTracks();
+  tracks.forEach(function(track) {
+    track.stop();
+  });
+  $("#video_button").prop("disabled", false);
+});
+
+const peer = new Peer({ key: "lwjd5qra8257b9" });
+peer.on("open", function() {
+  console.log(peer.id);
+  socket.emit( 'peerID', {peerID: peer.id});
+});
+peer.on("error", function(err) {
+  console.log(err);
+});
+function playStream(idVideoTag, stream) {
+  const video = document.getElementById(idVideoTag);
+  video.srcObject = stream;
+  video.play();
+}
+socket.on("answer_call", function(data, id) {
+  var id = id.callID;
+  var r = confirm(data.username + " is calling");
+  if (r == true) {
+    //call
+    openStream().then(stream => {
+      playStream("local_video", stream);
+      const call = peer.call(id, stream);
+      console.log("hey "+id);      
+      call.on("stream", remoteStream => playStream("user_video", remoteStream));
     });
-    $("#video_button").prop('disabled', false);
+    //answer
+    peer.on("call", call => {
+      console.log('aaaaaaa');
+      openStream().then(stream => {
+        call.answer(stream);
+        playStream("local_video", stream);
+        call.on("stream", remoteStream => playStream("user_video", remoteStream)
+        );
+      });
+    });
+    $("#modal_id").modal();
+  } else {
+    console.log("You press!");
+  }
 });
-
-const peer = new Peer({key: 'lwjd5qra8257b9'});
-
-peer.on('open', id => console.log(id) ,function(){
-  console.log("hle"+id);
-  
-});
-
-
