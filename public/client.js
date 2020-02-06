@@ -1,5 +1,5 @@
 const constraints = (window.constraints = {
-  audio: false,
+  audio: true,
   video: true
 });
 
