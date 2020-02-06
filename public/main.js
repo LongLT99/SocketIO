@@ -37,6 +37,7 @@ $("#buton").click(function() {
     ); //append list user
   }
 });
+
 $("#roomb").click(function() {
   if ($("#in_room").val() == "") {
     alert("please enter room's name");
@@ -53,6 +54,7 @@ $("#roomb").click(function() {
 $("#refresh").click(function() {
   $("#ibox").empty(); // reset in box
 });
+
 socket.on("changeuser", function(data) {
   // connect user
   $("#messages").append("<li>" + data.user + " is connect"); // connected user notication
@@ -64,6 +66,7 @@ socket.on("changeuser", function(data) {
     });
   });
 });
+
 socket.on("changeuser", function(list) {
   socket.on("update", function(list) {
     //update list user to select user
@@ -75,13 +78,16 @@ socket.on("changeuser", function(list) {
     });
   });
 });
+
 socket.on("leave", function(list) {
   $("#messages").append("<li>" + list.user + " is disconnect"); // disconnected user notication
 });
+
 socket.on("send_chat_mess_to_clien", function(data) {
   $("#messages").append("<li>" + data.username + ": " + data.msg); // send message
   $("#cbox").scrollTop($("#cbox").height());
 });
+
 socket.on("chat private", function(data, to) {
   // private mess
   $("#privates").append(
@@ -89,7 +95,3 @@ socket.on("chat private", function(data, to) {
   ); // send message
   $("#ibox").scrollTop($("#ibox").height());
 });
-function openStream() {
-  const config = { audio: false, video: true };
-  return navigator.mediaDevices.getUserMedia(config);
-}

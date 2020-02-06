@@ -53,19 +53,6 @@ async function init(e) {
     // } catch (e) {
     //   handleError(e);
     // }
-    socket.on("answer_call", function(data, id) {
-      var id = id.callID;
-      var r = confirm(data.username + " is calling");
-      //call
-      openStream().then(stream => {
-        playStream("local_video", stream);
-        const call = peer.call(id, stream);
-        console.log("hey " + id);
-        call.on("stream", remoteStream =>
-          playStream("user_video", remoteStream)
-        );
-      });
-    });
   }
 }
 const localvideo = document.querySelector("video#local_video");
@@ -91,11 +78,17 @@ peer.on("open", function() {
 peer.on("error", function(err) {
   console.log(err);
 });
+
+function openStream() {
+  const config = { audio: false, video: true };
+  return navigator.mediaDevices.getUserMedia(config);
+}
 function playStream(idVideoTag, stream) {
   const video = document.getElementById(idVideoTag);
   video.srcObject = stream;
   video.play();
 }
+
 socket.on("answer_call", function(data, id) {
   var id = id.callID;
   var r = confirm(data.username + " is calling");
@@ -108,18 +101,27 @@ socket.on("answer_call", function(data, id) {
       console.log("hey " + id);
       call.on("stream", remoteStream => playStream("user_video", remoteStream));
     });
+    $("#modal_title").empty();
+    $("#modal_title").append("connected");
   } else {
-    console.log("You press!");
+    socket.emit("deny_call", {
+      callerName: data.username,
+      answerName: data.targetname
+    });
   }
 });
-//answer
+
+//answer call
 peer.on("call", call => {
   console.log("aaaaaaa");
   openStream().then(stream => {
     call.answer(stream);
     playStream("local_video", stream);
-    call.on("stream", remoteStream =>
-      playStream("user_video", remoteStream)
-    );
+    call.on("stream", remoteStream => playStream("user_video", remoteStream));
   });
+});
+//deny call
+socket.on("deny_noty", function(data) {
+  $("#modal_title").empty();
+  $("#modal_title").append(data.denyName+ " has refused the call from you");
 });

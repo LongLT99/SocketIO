@@ -19,7 +19,7 @@ var peerID;
 io.on("connection", function(socket) {
   io.emit("update", list);
   io.emit("getID", ID);
-  io.emit("getpeerID",peerID);
+  io.emit("getpeerID", peerID);
   socket.on("disconnect", function() {
     io.emit("leave", { user: socket.username });
     delete list[socket.username];
@@ -49,6 +49,7 @@ io.on("connection", function(socket) {
     ID[userName] = userId;
     // console.log(userName+" "+userId);
   });
+
   socket.on("setRoom", function(data) {
     socket.RoomName = data.roomName;
     if (room[socket.RoomName] == null) {
@@ -73,6 +74,7 @@ io.on("connection", function(socket) {
       username: socket.username
     });
   });
+
   socket.on("private message", function(toname, msg) {
     io.to(ID[socket.username]).emit(
       "chat private",
@@ -85,9 +87,18 @@ io.on("connection", function(socket) {
       { touser: toname }
     );
   });
-  socket.on('calling',function(target,peerID){
-    io.to(ID[target]).emit('answer_call',{username: socket.username},{ callID : peerID});
-  })
+
+  socket.on("calling", function(target, peerID) {
+    io.to(ID[target]).emit(
+      "answer_call",
+      { username: socket.username,targetname : target },
+      { callID: peerID }
+    );
+  });
+
+  socket.on("deny_call", function(data){  
+    io.to(ID[data.callerName]).emit('deny_noty',{ denyName : data.answerName});
+  });
 });
 
 http.listen(3000, function() {
