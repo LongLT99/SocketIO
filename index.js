@@ -24,6 +24,7 @@ io.on("connection", function(socket) {
     io.emit("leave", { user: socket.username });
     delete list[socket.username];
     delete ID[socket.username];
+    delete mem[socket.username];
     io.emit("update", list);
     io.emit("getID", ID);
     //console.log("user: disconnected");
@@ -57,6 +58,7 @@ io.on("connection", function(socket) {
       room[data.roomName] = data.roomName;
       socket.join(data.roomName);
       mem[socket.RoomName] = data.username;
+      socket.emit('list_room',room,data.roomName);      
     } else {
       room[socket.RoomName] = data.roomName;
       socket.join(data.roomName);
@@ -91,16 +93,16 @@ io.on("connection", function(socket) {
   socket.on("calling", function(target, peerID) {
     io.to(ID[target]).emit(
       "answer_call",
-      { username: socket.username,targetname : target },
+      { username: socket.username, targetname: target },
       { callID: peerID }
     );
   });
 
-  socket.on("deny_call", function(data){  
-    io.to(ID[data.callerName]).emit('deny_noty',{ denyName : data.answerName});
+  socket.on("deny_call", function(data) {
+    io.to(ID[data.callerName]).emit("deny_noty", { denyName: data.answerName });
   });
 });
 
-http.listen(process.env.PORT||3000, function() {
+http.listen(process.env.PORT || 3000, function() {
   console.log("listening on *:3000");
 });

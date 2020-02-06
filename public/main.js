@@ -42,13 +42,22 @@ $("#roomb").click(function() {
   if ($("#in_room").val() == "") {
     alert("please enter room's name");
   } else {
-    alert("Wellcome to room");
+    // alert("Wellcome to room");
     socket.emit("setRoom", {
       roomName: $("#in_room").val(),
       username: $("#inputuse").val()
     });
   }
   $("#in_room").val("");
+});
+
+socket.on("list_room", function(room,roomName) {
+  $("#room_name").empty();
+  $("#room_name").append("<option>" + "all" + "</option>");
+  $.each(room, function(username) {
+    $("#room_name").append("<option>" + username + "</option>");
+  });
+  $("#room_name").val(roomName).select();
 });
 
 $("#refresh").click(function() {
@@ -72,7 +81,6 @@ socket.on("changeuser", function(list) {
     //update list user to select user
     $("#inboxuser").empty();
     $("#inboxuser").append("<option>" + "chat room" + "</option>");
-    $("#room_name").append("<option>" + "all" + "</option>");
     $.each(list, function(username) {
       $("#inboxuser").append("<option>" + username + "</option>");
     });

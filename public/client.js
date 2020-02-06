@@ -123,5 +123,5 @@ peer.on("call", call => {
 //deny call
 socket.on("deny_noty", function(data) {
   $("#modal_title").empty();
-  $("#modal_title").append(data.denyName+ " has refused the call from you");
+  $("#modal_title").append(data.denyName + " has refused the call from you");
 });
