@@ -36,14 +36,15 @@ function errorMsg(msg, error) {
 }
 
 async function init(e) {
-  if($("#inputuse").val()== ''){
-    alert("hey");    
-  }
-  else if($("#inputuse").val()==$("#inboxuser option:selected").text()||$("#inboxuser option:selected").text()=="chat room"){
+  if ($("#inputuse").val() == "") {
+    alert("hey");
+  } else if (
+    $("#inputuse").val() == $("#inboxuser option:selected").text() ||
+    $("#inboxuser option:selected").text() == "chat room"
+  ) {
     alert("ayyyyyyyyyy ban eeeee");
-  }
-  else{
-    socket.emit('calling',$("#inboxuser option:selected").text(),peer.id);
+  } else {
+    socket.emit("calling", $("#inboxuser option:selected").text(), peer.id);
     $("#modal_id").modal();
     // try {
     //   const streams = await navigator.mediaDevices.getUserMedia(constraints);
@@ -52,6 +53,19 @@ async function init(e) {
     // } catch (e) {
     //   handleError(e);
     // }
+    socket.on("answer_call", function(data, id) {
+      var id = id.callID;
+      var r = confirm(data.username + " is calling");
+      //call
+      openStream().then(stream => {
+        playStream("local_video", stream);
+        const call = peer.call(id, stream);
+        console.log("hey " + id);
+        call.on("stream", remoteStream =>
+          playStream("user_video", remoteStream)
+        );
+      });
+    });
   }
 }
 const localvideo = document.querySelector("video#local_video");
@@ -72,7 +86,7 @@ $("#modal_id").on("hidden.bs.modal", function() {
 const peer = new Peer({ key: "lwjd5qra8257b9" });
 peer.on("open", function() {
   console.log(peer.id);
-  socket.emit( 'peerID', {peerID: peer.id});
+  socket.emit("peerID", { peerID: peer.id });
 });
 peer.on("error", function(err) {
   console.log(err);
@@ -86,25 +100,26 @@ socket.on("answer_call", function(data, id) {
   var id = id.callID;
   var r = confirm(data.username + " is calling");
   if (r == true) {
+    $("#modal_id").modal();
     //call
     openStream().then(stream => {
       playStream("local_video", stream);
       const call = peer.call(id, stream);
-      console.log("hey "+id);      
+      console.log("hey " + id);
       call.on("stream", remoteStream => playStream("user_video", remoteStream));
     });
-    //answer
-    peer.on("call", call => {
-      console.log('aaaaaaa');
-      openStream().then(stream => {
-        call.answer(stream);
-        playStream("local_video", stream);
-        call.on("stream", remoteStream => playStream("user_video", remoteStream)
-        );
-      });
-    });
-    $("#modal_id").modal();
   } else {
     console.log("You press!");
   }
+});
+//answer
+peer.on("call", call => {
+  console.log("aaaaaaa");
+  openStream().then(stream => {
+    call.answer(stream);
+    playStream("local_video", stream);
+    call.on("stream", remoteStream =>
+      playStream("user_video", remoteStream)
+    );
+  });
 });
