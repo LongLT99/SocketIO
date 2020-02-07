@@ -90,7 +90,7 @@ io.on("connection", function(socket) {
     );
   });
 
-  socket.on("calling", function(target, peerID) {
+  socket.on("calling", function(target, peerID) {//get peerid from the caller
     io.to(ID[target]).emit(
       "answer_call",
       { username: socket.username, targetname: target },
@@ -98,8 +98,17 @@ io.on("connection", function(socket) {
     );
   });
 
+  socket.on("accept_call", function(data) {
+    io.to(ID[data.callerName]).emit("accept_noty", { acceptName: socket.username });
+  });
+
   socket.on("deny_call", function(data) {
     io.to(ID[data.callerName]).emit("deny_noty", { denyName: data.answerName });
+  });
+
+  socket.on("end_call", function(data){
+    console.log("a"+data.end);
+    io.to(ID[data.ended]).emit("end_noty",{endName : data.end});
   });
 });
 

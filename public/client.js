@@ -3,12 +3,148 @@ const constraints = (window.constraints = {
   video: true
 });
 
-function handleSuccess(stream) {
-  const videoTracks = stream.getTracks();
-  console.log("Got stream with constraints:", constraints);
-  console.log(`Using video device: ${videoTracks[0].label}`);
-  window.stream = stream; // make variable available to browser console
-  localvideo.srcObject = stream;
+const localvideo = document.querySelector("video#local_video");
+const uservideo = document.querySelector("video#user_video");
+var checkCall= false;
+
+const peer = new Peer({ key: "lwjd5qra8257b9" });
+peer.on("open", function() {
+  console.log(peer.id);
+  socket.emit("peerID", { peerID: peer.id });
+});
+peer.on("error", function(err) {
+  console.log(err);
+});
+
+const vb = document.querySelector("button#video_button");
+if (vb) {
+  vb.addEventListener("click", e => init(e));
+}
+
+async function init(e) {// click the video button
+  if ($("#inputuse").val() == "") {
+    alert("hey you dont have a name");
+  } else if (
+    $("#inputuse").val() == $("#inboxuser option:selected").text() ||
+    $("#inboxuser option:selected").text() == "chat room"
+  ) {
+    alert("ayyyyyyyyyy ban eeeee call ai vay ban");
+  } else {
+    $("#modal_title").empty();
+    $("#modal_title")
+      .removeClass()
+      .addClass("text-dark")
+      .append("Calling");
+    socket.emit("calling", $("#inboxuser option:selected").text(), peer.id);
+    $("#modal_id").modal();
+  }
+}
+
+//close modal video
+$("#modal_id").on("hidden.bs.modal", hidden_modal());
+
+socket.on("answer_call", function(data, id) {
+  if(checkCall ==true){
+    socket.emit("deny_call", {
+      callerName: data.username,
+      answerName: data.targetname
+    });
+  }else{
+    var id = id.callID;
+  var r = confirm(data.username + " is calling");
+  if (r == true) {
+    $("#modal_id").modal();
+    //call
+    openStream().then(stream => {
+      checkCall =true;
+      playStream("local_video", stream);
+      console.log("hey " + id);
+      const call = peer.call(id, stream);
+      call.on("stream", remoteStream => playStream("user_video", remoteStream));
+      call.on("close", function() {
+        checkCall=false;
+        disconnectedNoti();
+      });
+      $("#modal_id").on("hidden.bs.modal", function() {
+        call.close();
+      });
+    });
+    $("#modal_title").empty();
+    $("#modal_title")
+      .removeClass()
+      .addClass("text-success")
+      .append(data.username + " has connected");
+    socket.emit("accept_call", {
+      callerName: data.username
+    });
+  } else {
+    socket.emit("deny_call", {
+      callerName: data.username,
+      answerName: data.targetname
+    });
+  }
+  }
+});
+
+//answer call
+peer.on("call", call => {
+  openStream().then(stream => {
+    call.answer(stream);
+    playStream("local_video", stream);
+    call.on("stream", remoteStream => playStream("user_video", remoteStream));
+  });
+  call.on("close", function() {
+    checkCall=false;
+    disconnectedNoti();
+  });
+  $("#modal_id").on("hidden.bs.modal", function() {
+    call.close();
+  });
+});
+//deny call
+socket.on("deny_noty", function(data) {
+  $("#modal_title").empty();
+  $("#modal_title")
+    .removeClass()
+    .addClass("text-danger")
+    .append(data.denyName + " is busy now");
+});
+
+//accept call
+socket.on("accept_noty", function(data) {
+  $("#modal_title").empty();
+  $("#modal_title")
+    .removeClass()
+    .addClass("text-success")
+    .append(data.acceptName + " has connected");
+});
+
+function openStream() {
+  const config = { audio: false, video: true };
+  return navigator.mediaDevices.getUserMedia(config);
+}
+
+function playStream(idVideoTag, stream) {
+  const video = document.getElementById(idVideoTag);
+  video.srcObject = stream;
+  video.play();
+}
+
+function disconnectedNoti() {
+  $("#endvideo").click();
+}
+
+function hidden_modal() {
+  const stream = localvideo.srcObject;
+  if (stream != null) {
+    const tracks = stream.getTracks();
+    tracks.forEach(function(track) {
+      track.stop();
+    });
+    $("#video_button").prop("disabled", false);
+  } else {
+    $("#video_button").prop("disabled", false);
+  }
 }
 
 function handleError(error) {
@@ -34,94 +170,3 @@ function errorMsg(msg, error) {
     console.error(error);
   }
 }
-
-async function init(e) {
-  if ($("#inputuse").val() == "") {
-    alert("hey");
-  } else if (
-    $("#inputuse").val() == $("#inboxuser option:selected").text() ||
-    $("#inboxuser option:selected").text() == "chat room"
-  ) {
-    alert("ayyyyyyyyyy ban eeeee");
-  } else {
-    socket.emit("calling", $("#inboxuser option:selected").text(), peer.id);
-    $("#modal_id").modal();
-    // try {
-    //   const streams = await navigator.mediaDevices.getUserMedia(constraints);
-    //   handleSuccess(streams);
-    //   e.target.disabled = true;
-    // } catch (e) {
-    //   handleError(e);
-    // }
-  }
-}
-const localvideo = document.querySelector("video#local_video");
-const vb = document.querySelector("button#video_button");
-if (vb) {
-  vb.addEventListener("click", e => init(e));
-}
-
-$("#modal_id").on("hidden.bs.modal", function() {
-  const stream = localvideo.srcObject;
-  const tracks = stream.getTracks();
-  tracks.forEach(function(track) {
-    track.stop();
-  });
-  $("#video_button").prop("disabled", false);
-});
-
-const peer = new Peer({ key: "lwjd5qra8257b9" });
-peer.on("open", function() {
-  console.log(peer.id);
-  socket.emit("peerID", { peerID: peer.id });
-});
-peer.on("error", function(err) {
-  console.log(err);
-});
-
-function openStream() {
-  const config = { audio: false, video: true };
-  return navigator.mediaDevices.getUserMedia(config);
-}
-function playStream(idVideoTag, stream) {
-  const video = document.getElementById(idVideoTag);
-  video.srcObject = stream;
-  video.play();
-}
-
-socket.on("answer_call", function(data, id) {
-  var id = id.callID;
-  var r = confirm(data.username + " is calling");
-  if (r == true) {
-    $("#modal_id").modal();
-    //call
-    openStream().then(stream => {
-      playStream("local_video", stream);
-      const call = peer.call(id, stream);
-      console.log("hey " + id);
-      call.on("stream", remoteStream => playStream("user_video", remoteStream));
-    });
-    $("#modal_title").empty();
-    $("#modal_title").append("connected");
-  } else {
-    socket.emit("deny_call", {
-      callerName: data.username,
-      answerName: data.targetname
-    });
-  }
-});
-
-//answer call
-peer.on("call", call => {
-  console.log("aaaaaaa");
-  openStream().then(stream => {
-    call.answer(stream);
-    playStream("local_video", stream);
-    call.on("stream", remoteStream => playStream("user_video", remoteStream));
-  });
-});
-//deny call
-socket.on("deny_noty", function(data) {
-  $("#modal_title").empty();
-  $("#modal_title").append(data.denyName + " has refused the call from you");
-});
