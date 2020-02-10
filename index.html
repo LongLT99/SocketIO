@@ -26,7 +26,9 @@
       <input type="button" id="buton" class="col-2  bg-primary" value="create user">
     </div>
     <div class="colum col-7">
-      <select id="room_name" class="col-5"></select>
+      <select id="room_name" class="col-5" placeholder="room name">
+        <option value="" hidden >Pick room</option>
+      </select>
       <input id="in_room" class="col-4" placeholder="input room's name">
       <input type="button" id="roomb" class="col-2 bg-primary text-center" value="create room">
     </div>
@@ -59,7 +61,7 @@
         </div>
       </div>
       <div id="ibox" class="card-block">
-        <ul id="privates"></ul>
+        <p id="privates"></p>
       </div>
     </div>
   </div>
@@ -86,7 +88,9 @@
   <div>
   <form action="">
     <div class="row">
-      <select class="colum" id="inboxuser">
+      <select class="colum selectpicker" data-live-search-placeholder="Search" id="inboxuser">
+        <option value="" hidden >Pick friend</option>
+      </select>
     <input type="text" id="m" autocomplete="off" /><button type="button" id="send_button">Sent</button>
     <button type="button" class="btn btn-info btn-lg"  id="video_button" >video call</button>
   </div>

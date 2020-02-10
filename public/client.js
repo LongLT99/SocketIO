@@ -31,17 +31,25 @@ async function init(e) {// click the video button
     alert("ayyyyyyyyyy ban eeeee call ai vay ban");
   } else {
     $("#modal_title").empty();
-    $("#modal_title")
-      .removeClass()
-      .addClass("text-dark")
-      .append("Calling");
+    $("#modal_title").removeClass().addClass("text-dark").append("Calling");
     socket.emit("calling", $("#inboxuser option:selected").text(), peer.id);
     $("#modal_id").modal();
   }
 }
 
 //close modal video
-$("#modal_id").on("hidden.bs.modal", hidden_modal());
+$("#modal_id").on("hidden.bs.modal", function hidden_modal() {
+  const stream = localvideo.srcObject;
+  if (stream != null) {
+    const tracks = stream.getTracks();
+    tracks.forEach(function(track) {
+      track.stop();
+    });
+    $("#video_button").prop("disabled", false);
+  } else {
+    $("#video_button").prop("disabled", false);
+  }
+});
 
 socket.on("answer_call", function(data, id) {
   if(checkCall ==true){
@@ -70,10 +78,7 @@ socket.on("answer_call", function(data, id) {
       });
     });
     $("#modal_title").empty();
-    $("#modal_title")
-      .removeClass()
-      .addClass("text-success")
-      .append(data.username + " has connected");
+    $("#modal_title").removeClass().addClass("text-success").append(data.username + " has connected");
     socket.emit("accept_call", {
       callerName: data.username
     });
@@ -104,19 +109,13 @@ peer.on("call", call => {
 //deny call
 socket.on("deny_noty", function(data) {
   $("#modal_title").empty();
-  $("#modal_title")
-    .removeClass()
-    .addClass("text-danger")
-    .append(data.denyName + " is busy now");
+  $("#modal_title").removeClass().addClass("text-danger").append(data.denyName + " is busy now");
 });
 
 //accept call
 socket.on("accept_noty", function(data) {
   $("#modal_title").empty();
-  $("#modal_title")
-    .removeClass()
-    .addClass("text-success")
-    .append(data.acceptName + " has connected");
+  $("#modal_title").removeClass().addClass("text-success").append(data.acceptName + " has connected");
 });
 
 function openStream() {
@@ -132,19 +131,6 @@ function playStream(idVideoTag, stream) {
 
 function disconnectedNoti() {
   $("#endvideo").click();
-}
-
-function hidden_modal() {
-  const stream = localvideo.srcObject;
-  if (stream != null) {
-    const tracks = stream.getTracks();
-    tracks.forEach(function(track) {
-      track.stop();
-    });
-    $("#video_button").prop("disabled", false);
-  } else {
-    $("#video_button").prop("disabled", false);
-  }
 }
 
 function handleError(error) {

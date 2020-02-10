@@ -12,6 +12,7 @@ app.get("/", function(req, res) {
 });
 
 var list = {};
+var listf = {};
 var ID = {};
 var room = {};
 var mem = {};
@@ -21,7 +22,7 @@ io.on("connection", function(socket) {
   io.emit("getID", ID);
   io.emit("getpeerID", peerID);
   socket.on("disconnect", function() {
-    io.emit("leave", { user: socket.username });
+    io.emit("leave", { user : socket.username });
     delete list[socket.username];
     delete ID[socket.username];
     delete mem[socket.username];
@@ -66,10 +67,8 @@ io.on("connection", function(socket) {
     }
   });
 
-  // socket.on("postname", function(data) {
-  //   var toName = data.toname;
-  //   // console.log(toName);
-  // });
+  
+
   socket.on("send_chat_mess_to_sever", function(msg) {
     io.to(room[socket.RoomName]).emit("send_chat_mess_to_clien", {
       msg: msg,
@@ -83,19 +82,11 @@ io.on("connection", function(socket) {
       { msg: msg, username: socket.username },
       { touser: toname }
     );
-    io.to(ID[toname]).emit(
-      "chat private",
-      { msg: msg, username: socket.username },
-      { touser: toname }
-    );
+    io.to(ID[toname]).emit( "chat private", { msg: msg, username: socket.username }, { touser: toname } );
   });
 
   socket.on("calling", function(target, peerID) {//get peerid from the caller
-    io.to(ID[target]).emit(
-      "answer_call",
-      { username: socket.username, targetname: target },
-      { callID: peerID }
-    );
+    io.to(ID[target]).emit( "answer_call", { username: socket.username, targetname: target }, { callID: peerID } );
   });
 
   socket.on("accept_call", function(data) {

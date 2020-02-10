@@ -41,6 +41,7 @@ body {
   height: 40px;
   background-color: rgb(236, 235, 241, 0.6);
   border: groove rgb(127, 206, 230);
+  color: rgb(16, 42, 100);
 }
 
 #in_room {
@@ -56,6 +57,7 @@ body {
   color: rgb(255, 255, 255);
   border: none;
 }
+
 
 /* box chat */
 #cxbox {
@@ -149,6 +151,7 @@ form {
   padding: 0px;
   background-color: rgb(236, 235, 241, 0.8);
   border: groove rgb(76, 128, 145);
+  color: rgb(62, 72, 216);
 }
 
 form input {
