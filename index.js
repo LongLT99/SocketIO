@@ -12,20 +12,20 @@ app.get("/", function(req, res) {
 });
 
 var list = {};
-var listf = {};
 var ID = {};
 var room = {};
-var mem = {};
-var peerID;
+var pass = {};
+var mem = [];
 io.on("connection", function(socket) {
   io.emit("update", list);
   io.emit("getID", ID);
-  io.emit("getpeerID", peerID);
   socket.on("disconnect", function() {
-    io.emit("leave", { user : socket.username });
+    mem[socket.RoomName] -= 1;
+    console.log(mem[socket.RoomName]);
+    delete_room(socket.RoomName);
+    io.emit("leave", socket.username, room);
     delete list[socket.username];
     delete ID[socket.username];
-    delete mem[socket.username];
     io.emit("update", list);
     io.emit("getID", ID);
     //console.log("user: disconnected");
@@ -39,10 +39,9 @@ io.on("connection", function(socket) {
     delete ID[socket.username];
     socket.username = data.username;
     list[data.username] = data.username;
-    // console.log(list);
     io.emit("changeuser", { user: socket.username });
+    socket.emit('list_room',room); 
     io.emit("update", list);
-    // console.log("halo: " + data.username);
   });
 
   socket.on("setSocketId", function(data) {
@@ -57,17 +56,28 @@ io.on("connection", function(socket) {
     if (room[socket.RoomName] == null) {
       // chua co room
       room[data.roomName] = data.roomName;
+      pass[data.roomName] = data.pass_room;
       socket.join(data.roomName);
-      mem[socket.RoomName] = data.username;
-      socket.emit('list_room',room,data.roomName);      
-    } else {
-      room[socket.RoomName] = data.roomName;
-      socket.join(data.roomName);
-      mem[socket.RoomName] = data.username;
+      mem[socket.RoomName] = 1;
+      socket.emit('list_room',room);    
+      socket.broadcast.emit('list_room',room);    
+
+    } else {// trung ten room
+      io.to(ID[data.username]).emit('room_alert',{room_name : data.roomName});
     }
   });
-
-  
+  socket.on("joinRoom", function(data){
+      if(data.room_pass.localeCompare(pass[data.roomName])==0){
+        mem[socket.RoomName] -= 1;
+        delete_room(socket.RoomName);
+        socket.RoomName = data.roomName;        
+        socket.join(data.roomName);
+        mem[socket.RoomName] += 1;
+        console.log(mem[socket.RoomName]);        
+    }else{
+      io.to(ID[data.username]).emit('join_alert',{room_name : data.roomName});
+    }
+  });
 
   socket.on("send_chat_mess_to_sever", function(msg) {
     io.to(room[socket.RoomName]).emit("send_chat_mess_to_clien", {
@@ -76,12 +86,15 @@ io.on("connection", function(socket) {
     });
   });
 
+  function delete_room(name){
+    if(mem[name]==0){
+      delete room[name];
+      socket.emit('list_room',room); 
+    }
+  }
+
   socket.on("private message", function(toname, msg) {
-    io.to(ID[socket.username]).emit(
-      "chat private",
-      { msg: msg, username: socket.username },
-      { touser: toname }
-    );
+    io.to(ID[socket.username]).emit( "chat private", { msg: msg, username: socket.username }, { touser: toname } );
     io.to(ID[toname]).emit( "chat private", { msg: msg, username: socket.username }, { touser: toname } );
   });
 

@@ -14,7 +14,7 @@
 body {
   font: 13px Helvetica, Arial;
   background: rgb(241, 247, 244);
-  background-image: url(../img/nen.jpg);
+  background-image: url(../img/ocean_to_ocean.jpg);
   background-size: cover;
 }
 /* input user */
@@ -28,7 +28,7 @@ body {
 }
 
 ::placeholder {
-  color: rgb(253, 253, 253);
+  color: rgb(255, 255, 255,0.8);
 }
 
 #buton {
@@ -58,6 +58,12 @@ body {
   border: none;
 }
 
+#roomj {
+  padding: 8px;
+  color: rgb(255, 255, 255);
+  border: none;
+}
+
 
 /* box chat */
 #cxbox {
@@ -72,12 +78,11 @@ body {
   padding: 0;
   background: rgb(241, 247, 244, 0.2);
   height: 490px;
+  max-height: 490px;
 }
 ::-webkit-scrollbar {
   display: none;
 }
-
-
 
 /* online user */
 #onhead {

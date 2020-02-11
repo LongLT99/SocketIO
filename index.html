@@ -26,11 +26,12 @@
       <input type="button" id="buton" class="col-2  bg-primary" value="create user">
     </div>
     <div class="colum col-7">
-      <select id="room_name" class="col-5" placeholder="room name">
-        <option value="" hidden >Pick room</option>
-      </select>
-      <input id="in_room" class="col-4" placeholder="input room's name">
+      <input id="in_room" class="col-3" placeholder="input room's name">
       <input type="button" id="roomb" class="col-2 bg-primary text-center" value="create room">
+      <select id="room_name" class="col-4" placeholder="room name">
+        <option value="" hidden>Available room</option>
+      </select>
+      <input type="button" id="roomj" class="col-2 bg-primary text-center" value="join room">
     </div>
   </div>
 
@@ -40,7 +41,7 @@
         Box chat
       </div>
       <div id="cbox" class="card-block">
-        <ul id="messages" ></ul>
+        <ul id="messages"></ul>
       </div>
     </div>
     <div class="colum col-4">
@@ -66,7 +67,7 @@
     </div>
   </div>
   <div class="modal" tabindex="-1" role="dialog" id="modal_id">
-    <div class="modal-dialog modal-xl"  role="document">
+    <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="modal_title">Calling</h5>
@@ -77,30 +78,30 @@
         <div class="modal-body d-flex justify-content-center  ">
           <video id="local_video" width="400" autoplay playsinline></video>
           <div class="vl"></div>
-          <video id="user_video" width="400" autoplay playsinline></video>          
+          <video id="user_video" width="400" autoplay playsinline></video>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
-  </div> 
-  <div>
-  <form action="">
-    <div class="row">
-      <select class="colum selectpicker" data-live-search-placeholder="Search" id="inboxuser">
-        <option value="" hidden >Pick friend</option>
-      </select>
-    <input type="text" id="m" autocomplete="off" /><button type="button" id="send_button">Sent</button>
-    <button type="button" class="btn btn-info btn-lg"  id="video_button" >video call</button>
   </div>
-  </form>
-</div>
+  <div>
+    <form action="">
+      <div class="row">
+        <select class="colum selectpicker" data-live-search-placeholder="Search" id="inboxuser">
+          <option value="" hidden>Online friend</option>
+        </select>
+        <input type="text" id="m" autocomplete="off" /><button type="button" id="send_button">Sent</button>
+        <button type="button" class="btn btn-info btn-lg" id="video_button">video call</button>
+      </div>
+    </form>
+  </div>
   <script src="main.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/peerjs@0.3.20/dist/peer.min.js"></script>
   <script src="client.js"></script>
   <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-  
+
 </body>
 
 </html>
