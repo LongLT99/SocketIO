@@ -24,15 +24,12 @@ if (vb) {
 async function init(e) {// click the video button
   if ($("#inputuse").val() == "") {
     alert("hey you dont have a name");
-  } else if (
-    $("#inputuse").val() == $("#inboxuser option:selected").text() ||
-    $("#inboxuser option:selected").text() == "chat room"
-  ) {
-    alert("ayyyyyyyyyy ban eeeee call ai vay ban");
+  } else if ( $("#inboxuser option:selected").text() == "chat room" ){
+    alert("please select friend's name to call");
   } else {
     $("#modal_title").empty();
     $("#modal_title").removeClass().addClass("text-dark").append("Calling");
-    socket.emit("calling", $("#inboxuser option:selected").text(), peer.id);
+    socket.emit("calling", $("#inboxuser option:selected").text(), peer.id);//sending peer id to call
     $("#modal_id").modal();
   }
 }
