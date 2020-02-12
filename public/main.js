@@ -3,12 +3,19 @@ $("#send_button").click(function() {
   $("form").submit();
 });
 $("form").submit(function(e) {
-  if ($("#inboxuser option:selected").text() == "chat room") {
-    e.preventDefault(); // prevents page reloading
-    socket.emit("send_chat_mess_to_sever", $("#m").val());
-  } else {
-    e.preventDefault(); // prevents page reloading
-    socket.emit( "private message", $("#inboxuser option:selected").text(), $("#m").val() ); // private mess
+  if($("#m").val()!=""){// not empty mess
+    if ($("#inboxuser option:selected").text() == "chat room") {
+      if($("#room_name option:selected").text() != "all"){
+        e.preventDefault(); // prevents page reloading
+        socket.emit("send_to_room", $("#m").val());
+      }else{
+        e.preventDefault(); // prevents page reloading
+        socket.emit("send_to_all", $("#m").val());
+      }
+    } else {
+      e.preventDefault(); 
+      socket.emit( "private message", $("#inboxuser option:selected").text(), $("#m").val() ); // private mess
+    }
   }
   if ($("#inputuse").val() == "") {
     alert("Please enter your name");
@@ -38,7 +45,7 @@ $("#roomb").click(function() {//create room
     alert("please enter room's name");
   } else {
     var pass = prompt("enter your room password");
-    if(pass!=null){
+    if(pass!=null && pass!=""){
       socket.emit("setRoom", { roomName: $("#in_room").val(), username: $("#inputuse").val(), pass_room : pass });
     }else{
       alert("create room fail");
@@ -101,8 +108,13 @@ socket.on("leave", function(user, room) {
   });
 });
 
-socket.on("send_chat_mess_to_clien", function(data) {
+socket.on("send_to_clien", function(data) {
   $("#messages").append("<li>" + data.username + ": " + data.msg); // send message
+  $("#cbox").scrollTop($("#messages").height());
+});
+
+socket.on("chat_all", function(data){
+  $("#messages").append("<li>" + data.username + " to all : " + data.msg);
   $("#cbox").scrollTop($("#messages").height());
 });
 

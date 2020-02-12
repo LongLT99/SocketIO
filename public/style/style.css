@@ -124,7 +124,7 @@ body {
 
 #ibox {
   overflow-y: scroll;
-  height: 300px;
+  height: 280px;
   background-color: rgb(19, 248, 248, 0.3);
 }
 
@@ -137,6 +137,8 @@ body {
   list-style-type: none;
   margin: 0;
   color: #fff;
+  max-width: 520px;
+  word-wrap: break-word;
 }
 
 /* #privates li:nth-child(odd) {
@@ -169,16 +171,41 @@ form input {
 #send_button {
   width: 10%;
   color: rgb(252, 249, 249);
-  background: rgb(10, 24, 53);
+  background: rgb(46, 45, 71);
   border: none;
   padding: 10px;
+  margin-right: 0.5%;
 }
+
+#send_icon{
+  width: 20%;
+}
+
 #video_button {
   width: 10%;
   color: #fff;
   background-color: blue;
-  padding-left: 10px;
+  padding-left: 2px;
   border: none;
+}
+
+#vcall_icon{
+  width: 25%;
+}
+
+#icon_button{
+  width: 60px;
+  background-color: DodgerBlue;
+  border: none;
+  color: white;
+  padding: 5px 12px;
+  font-size: 6px;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+#smile{
+  width: 50%;
 }
 
 #m {
@@ -187,6 +214,8 @@ form input {
 
 #messages {
   margin: 0;
+  max-width: 850px;
+  word-wrap: break-word;
 }
 
 #messages li {

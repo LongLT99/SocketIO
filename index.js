@@ -77,8 +77,12 @@ io.on("connection", function(socket) {
     }
   });
 
-  socket.on("send_chat_mess_to_sever", function(msg) {
-    io.to(room[socket.RoomName]).emit("send_chat_mess_to_clien", { msg: msg, username: socket.username });// send message to room member
+  socket.on("send_to_room", function(msg) {
+    io.to(room[socket.RoomName]).emit("send_to_clien", { msg: msg, username: socket.username });// send message to room member
+  });
+  socket.on("send_to_all", function(msg){
+    socket.emit('chat_all',{ msg: msg, username: socket.username });   
+    socket.broadcast.emit('chat_all',{ msg: msg, username: socket.username });
   });
 
   function delete_room(name){
