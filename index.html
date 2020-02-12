@@ -17,10 +17,11 @@
 
 <body class="container-fluid">
   <title>Long_chit_chat</title>
+  <!-- menu bar -->
   <div class="row">
     <h1 id="myHeader">Welcome to box chat</h1>
   </div>
-
+  <!-- create user and room -->
   <div class="row my-1">
     <div class="colum col-5">
       <input type="text" id="inputuse" class="col-9" placeholder="input your username">
@@ -36,6 +37,7 @@
     </div>
   </div>
 
+  <!-- Inbox chat and online user -->
   <div class="row">
     <div class="colum col-8">
       <div id="cxbox" class="card-header text-center">
@@ -67,6 +69,8 @@
       </div>
     </div>
   </div>
+
+  <!-- video call modal -->
   <div class="modal" tabindex="-1" role="dialog" id="modal_id">
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
@@ -87,19 +91,30 @@
       </div>
     </div>
   </div>
+
+  <!-- sending message form -->
   <div>
     <form action="">
       <div class="row">
         <select class="colum" id="inboxuser">
           <option value="" hidden>Online friend</option>
         </select>
-        <button type="button" id="icon_button" ><img id="smile" src="/img/happy.png" ></button>
+        <!-- Default dropup button -->
+        <div class="btn-group dropup">
+          <button type="button" id="icon_button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" >
+            <img id="smile" src="/img/happy.png">
+          </button>
+          <div class="dropdown-menu">
+            <ul id="emoji"></ul>
+          </div>
+        </div>
         <input type="text" id="m" autocomplete="off" />
         <button type="button" id="send_button"><img id="send_icon" src="/img/email.png" class="center"></button>
         <button type="button" id="video_button"><img id="vcall_icon" src="/img/communications.png" class="center"></button>
       </div>
     </form>
   </div>
+
   <script src="main.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/peerjs@0.3.20/dist/peer.min.js"></script>
   <script src="client.js"></script>

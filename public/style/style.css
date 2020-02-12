@@ -28,7 +28,7 @@ body {
 }
 
 ::placeholder {
-  color: rgb(255, 255, 255,0.8);
+  color: rgb(255, 255, 255, 0.8);
 }
 
 #buton {
@@ -64,7 +64,6 @@ body {
   border: none;
 }
 
-
 /* box chat */
 #cxbox {
   background-color: rgb(63, 127, 211);
@@ -92,10 +91,10 @@ body {
   text-align: center;
 }
 
-#onbox{
+#onbox {
   overflow-y: scroll;
   height: 150px;
-  background-color: rgb(19, 248, 248,0.2);
+  background-color: rgb(19, 248, 248, 0.2);
 }
 
 #online_user li {
@@ -177,7 +176,7 @@ form input {
   margin-right: 0.5%;
 }
 
-#send_icon{
+#send_icon {
   width: 20%;
 }
 
@@ -189,22 +188,24 @@ form input {
   border: none;
 }
 
-#vcall_icon{
+#vcall_icon {
   width: 25%;
 }
 
-#icon_button{
+#icon_button {
   width: 60px;
   background-color: DodgerBlue;
   border: none;
   color: white;
   padding: 5px 12px;
   font-size: 6px;
-  cursor: pointer;
   margin-left: 5px;
 }
+.dropdown-toggle ::after{
+  display: none !important;
+}
 
-#smile{
+#smile {
   width: 50%;
 }
 
@@ -220,7 +221,7 @@ form input {
 
 #messages li {
   list-style-type: none;
-  padding :5px 5px ;
+  padding: 5px 5px;
   color: #fff;
 }
 
@@ -231,4 +232,13 @@ form input {
   border-left: 2px solid rgb(255, 255, 255);
   padding: 5px;
   height: 300px;
+}
+
+#emoji{
+  max-height: 250px;
+  overflow-y: scroll;
+}
+#pick_icon{
+  border: none;
+  background-color: #fff;
 }

@@ -125,3 +125,23 @@ socket.on("chat private", function(data, to) {// inbox private
     $("#privates").empty();
   });
 });
+
+$('#icon_button').click(function(){
+  var iconid = 128512;
+  while(iconid < 128592){  
+    $("#emoji").append('<button type="button" class="btn btn-secondary" id ="pick_icon" onclick="pick_emoji('+iconid +')" > &#' +iconid + "; ");
+    iconid +=1;
+  }
+});
+
+function pick_emoji(emojid){
+  const x= "&#";
+  const y=";";
+  var emoji=x+emojid+y;
+  socket.emit('send_icon',{icon : emoji});
+};
+
+socket.on("get_icon",function(id){
+  var emo= $("#m").val();
+  $("#m").val(emo+id.emoji);  
+});

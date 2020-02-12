@@ -112,6 +112,10 @@ io.on("connection", function(socket) {
   socket.on("end_call", function(data){
     io.to(ID[data.ended]).emit("end_noty",{endName : data.end});
   });
+
+  socket.on("send_icon", function(id){
+    socket.emit('get_icon',{emoji : id.icon});
+  });
 });
 
 http.listen(process.env.PORT || 3000, function() {
