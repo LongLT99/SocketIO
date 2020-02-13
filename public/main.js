@@ -12,15 +12,13 @@ $("form").submit(function(e) {
         e.preventDefault();
         socket.emit("send_to_all", $("#m").val());
       }
-    }else {
-      e.preventDefault(); 
-      socket.emit( "private message", $("#inboxuser option:selected").text(), $("#m").val() ); // private mess
-    }
-    console.log($("#info").html());
-    
-    if ($("#info").hide()) {
+    }else if ($("#info").hide()) {
       e.preventDefault(); // prevents page reloading
       socket.emit("send_to_all", $("#m").val());
+    }
+    else {
+      e.preventDefault(); 
+      socket.emit( "private message", $("#inboxuser option:selected").text(), $("#m").val() ); // private mess
     }
   }
   socket.emit("disconnect", $("#inputuse").val());
@@ -36,7 +34,7 @@ $("#buton").click(function() {//create user
     socket.emit("setSocketId", { name: $("#inputuse").val(), userId: socket.id }); //send username +id ->setSocketId
     socket.emit("changeuser", { username: $("#inputuse").val() }); // send username -> changeuser
   }
-  // $("#inputuse").val("");
+  $("#inputuse").val("");
 });
 
 socket.on('room_alert',function(room){
