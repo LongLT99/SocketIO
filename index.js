@@ -29,7 +29,11 @@ io.on("connection", function(socket) {
     io.emit("getID", ID);
   });
 
-  socket.username = "guest";
+  function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
+  }
+
+  socket.username = "guest"+getRandomInt(10000);
   socket.RoomName = "guest";
 
   socket.on("changeuser", function(data) {// create user button
@@ -38,7 +42,9 @@ io.on("connection", function(socket) {
       delete ID[socket.username];
       socket.username = data.username;
       list[data.username] = data.username;
-      io.emit("changeuser", { user: socket.username });
+      io.emit("change_user", { user: socket.username });
+      io.to(ID[socket.username]).emit("get_info",{ user: socket.username });
+      
       socket.emit('list_room',room); 
       io.emit("update", list);
     }else{
@@ -112,9 +118,12 @@ io.on("connection", function(socket) {
   socket.on("end_call", function(data){
     io.to(ID[data.ended]).emit("end_noty",{endName : data.end});
   });
-
-  socket.on("send_icon", function(id){
-    socket.emit('get_icon',{emoji : id.icon});
+  socket.on('typing', function(name,t){
+    if(t==1){
+      socket.broadcast.emit('is_typing',name);
+    }else{
+      socket.broadcast.emit('is_not_typing',name);
+    }
   });
 });
 

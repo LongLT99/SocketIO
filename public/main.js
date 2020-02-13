@@ -9,16 +9,19 @@ $("form").submit(function(e) {
         e.preventDefault(); // prevents page reloading
         socket.emit("send_to_room", $("#m").val());
       }else{
-        e.preventDefault(); // prevents page reloading
+        e.preventDefault();
         socket.emit("send_to_all", $("#m").val());
       }
-    } else {
+    }else {
       e.preventDefault(); 
       socket.emit( "private message", $("#inboxuser option:selected").text(), $("#m").val() ); // private mess
     }
-  }
-  if ($("#inputuse").val() == "") {
-    alert("Please enter your name");
+    console.log($("#info").html());
+    
+    if ($("#info").hide()) {
+      e.preventDefault(); // prevents page reloading
+      socket.emit("send_to_all", $("#m").val());
+    }
   }
   socket.emit("disconnect", $("#inputuse").val());
   $("#m").val("");
@@ -33,6 +36,7 @@ $("#buton").click(function() {//create user
     socket.emit("setSocketId", { name: $("#inputuse").val(), userId: socket.id }); //send username +id ->setSocketId
     socket.emit("changeuser", { username: $("#inputuse").val() }); // send username -> changeuser
   }
+  // $("#inputuse").val("");
 });
 
 socket.on('room_alert',function(room){
@@ -41,14 +45,18 @@ socket.on('room_alert',function(room){
 
 
 $("#roomb").click(function() {//create room
-  if ($("#in_room").val() == "") {
-    alert("please enter room's name");
-  } else {
-    var pass = prompt("enter your room password");
-    if(pass!=null && pass!=""){
-      socket.emit("setRoom", { roomName: $("#in_room").val(), username: $("#inputuse").val(), pass_room : pass });
-    }else{
-      alert("create room fail");
+  if($('#info').html()==""){
+    alert("you can get in room without name!!!")
+  }else{
+    if ($("#in_room").val() == "") {
+      alert("please enter room's name");
+    } else {
+      var pass = prompt("enter your room password");
+      if(pass!=null && pass!=""){
+        socket.emit("setRoom", { roomName: $("#in_room").val(), username: $("#inputuse").val(), pass_room : pass });//sending room password
+      }else{
+        alert("create room fail");
+      }
     }
   }
 });
@@ -57,15 +65,17 @@ socket.on('name_alert',function(name){
 });
 
 $("#roomj").click(function() {
-  if($("#room_name").val()!="all"){
+  if($("#room_name").val()=="all"){
+    alert("all is not a room if dont have any create one");
+  }else if($("#room_name").val()==""){
+    alert("you can't join room with without name !!!")
+  }else{    
     var passr = prompt("enter room's password please ");
     if(passr!=null){
       socket.emit("joinRoom", { roomName: $("#room_name").val(), username: $("#inputuse").val(), room_pass : passr });
     }else{
       alert("join room fail");
     }
-  }else{
-    alert("all is not a room");
   }
 });
 
@@ -81,8 +91,11 @@ socket.on("list_room", function(room) {
   });
 });
 
-socket.on("changeuser", function(data) {
+var name;
+
+socket.on("change_user", function(data) {
   $("#messages").append("<li>" + data.user + " is connect"); // connected user notication
+  name=data.user;
   socket.on("update", function(list) {// update online user
     $("#online_user").empty();
     $.each(list, function(username) {
@@ -91,13 +104,20 @@ socket.on("changeuser", function(data) {
     //update list user to select user
     $("#inboxuser").empty();
     $("#inboxuser").append("<option>chat room</option>");
+    console.log(typeof($("#inname").html()));
     $.each(list, function(username) {
-      if(username!=$("#inputuse").val()){
+      if(username!=name){  
         $("#inboxuser").append("<option>" + username + "</option>");
       }
     });
   });
 });
+
+socket.on("get_info",function(data){
+  $("#info").show();
+  $("#inname").empty();
+  $("#info").append('<span id ="inname"> '+ data.user +'</span>');
+})
 
 socket.on("leave", function(user, room) {
   $("#messages").append("<li>" + user + " is disconnect"); // disconnected user notication
@@ -129,19 +149,31 @@ socket.on("chat private", function(data, to) {// inbox private
 $('#icon_button').click(function(){
   var iconid = 128512;
   while(iconid < 128592){  
-    $("#emoji").append('<button type="button" class="btn btn-secondary" id ="pick_icon" onclick="pick_emoji('+iconid +')" > &#' +iconid + "; ");
+    $("#emoji").append('<button type="button" id="icon_' + iconid + '" class="btn btn-light" style="width:20%; font-size:x-large" onclick="pick_emoji(\icon_' + iconid + '\)">&#' + iconid +';</button>');
     iconid +=1;
   }
 });
 
-function pick_emoji(emojid){
-  const x= "&#";
-  const y=";";
-  var emoji=x+emojid+y;
-  socket.emit('send_icon',{icon : emoji});
-};
+function pick_emoji(emoji) {
+  $("#m").val($("#m").val() + $(emoji).html()).focus();
+}
 
-socket.on("get_icon",function(id){
-  var emo= $("#m").val();
-  $("#m").val(emo+id.emoji);  
+$("#m").focus(function(){
+    if($('#inboxuser').val() == "chat room"){
+      const check_t=1;
+      socket.emit('typing',$('#inputuse').val(),check_t);  
+    } 
+})
+
+$("#m").focusout(function(){
+    const check_f=0;
+    socket.emit('typing',$('#inputuse').val(),check_f);
+})
+
+socket.on('is_typing', function(name){
+    $("#typing").empty();
+    $("#typing").append(name + " is typing ...");
 });
+socket.on("is_not_typing",function(name){
+  $("#typing").empty();
+})
