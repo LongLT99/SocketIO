@@ -155,7 +155,7 @@ function pick_emoji(emoji) {
 $("#m").focus(function(){
     if($('#inboxuser').val() == "chat room"){
       const check_t=1;
-      socket.emit('typing',$('#inputuse').val(),check_t);  
+      socket.emit('typing',$('#inname').text(),check_t);
     } 
 })
 
