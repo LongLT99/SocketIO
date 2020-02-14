@@ -22,7 +22,7 @@ if (vb) {
 }
 
 async function init(e) {// click the video button
-  if ($("#inputuse").val() == "") {
+  if ($("#inname").html()=="") {
     alert("hey you dont have a name");
   } else if ( $("#inboxuser option:selected").text() == "chat room" ){
     alert("please select friend's name to call");

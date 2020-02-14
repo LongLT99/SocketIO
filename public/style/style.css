@@ -10,11 +10,6 @@
   display: none;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 
 body {
   font: 13px Helvetica, Arial;
@@ -81,7 +76,7 @@ body {
   overflow-y: scroll;
   padding: 0;
   background: rgb(241, 247, 244, 0.2);
-  height: 490px;
+  height: 480px;
   max-height: 490px;
 }
 ::-webkit-scrollbar {
@@ -128,7 +123,7 @@ body {
 
 #ibox {
   overflow-y: scroll;
-  height: 280px;
+  height: 270px;
   background-color: rgb(19, 248, 248, 0.3);
 }
 
@@ -173,12 +168,14 @@ form input {
 }
 
 #send_button {
-  width: 10%;
+  width: 8%;
   color: rgb(252, 249, 249);
   background: rgb(46, 45, 71);
   border: none;
-  padding: 10px;
+  padding: 0px;
   margin-right: 0.5%;
+  border-radius: 8px;
+  height: 35px;
 }
 
 #send_icon {
@@ -186,11 +183,12 @@ form input {
 }
 
 #video_button {
-  width: 10%;
+  width: 8%;
   color: #fff;
   background-color: blue;
-  padding-left: 2px;
   border: none;
+  margin-right: 0.5%;
+  border-radius: 8px;
 }
 
 #vcall_icon {
@@ -216,6 +214,7 @@ form input {
 
 #m {
   padding: 0px;
+  height: 35px;
 }
 
 #messages {
@@ -246,8 +245,23 @@ form input {
 #emoji{
   max-height: 250px;
   overflow-y: scroll;
+  margin: 0%;
+  padding: 0%;
 }
 
 div.dropdown-menu.show{
   width: 250px;
+}
+
+#game{
+  width: 6%;
+  color: #fff;
+  background-color: rgb(140, 88, 184);
+  margin-left: 0,5%;
+  border: none;
+  border-radius: 8px;
+}
+
+#game_icon{
+  width: 35%;
 }
