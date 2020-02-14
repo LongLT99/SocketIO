@@ -43,11 +43,12 @@ socket.on('room_alert',function(room){
 
 
 $("#roomb").click(function() {//create room
-  if($('#info').html()==""){
-    alert("you can get in room without name!!!")
+  if($('#inname').html()==null){
+    alert("you must create user name fist to create room !!!")
   }else{
     if ($("#in_room").val() == "") {
       alert("please enter room's name");
+      console.log($("#inname").html());
     } else {
       var pass = prompt("enter your room password");
       if(pass!=null && pass!=""){
@@ -65,8 +66,8 @@ socket.on('name_alert',function(name){
 $("#roomj").click(function() {
   if($("#room_name").val()=="all"){
     alert("all is not a room if dont have any create one");
-  }else if($("#room_name").val()==""){
-    alert("you can't join room with without name !!!")
+  }else if($('#inname').html() == null){
+    alert("you must create user name fist to join room !!!")
   }else{    
     var passr = prompt("enter room's password please ");
     if(passr!=null){
@@ -102,7 +103,6 @@ socket.on("change_user", function(data) {
     //update list user to select user
     $("#inboxuser").empty();
     $("#inboxuser").append("<option>chat room</option>");
-    console.log(typeof($("#inname").html()));
     $.each(list, function(username) {
       if(username!=name){  
         $("#inboxuser").append("<option>" + username + "</option>");
