@@ -10,9 +10,9 @@ $("form").submit(function(e) {
         socket.emit("send_to_room", $("#m").val());
       }else{
         e.preventDefault();
-        socket.emit("send_to_all", $("#m").val());
+        socket.emit("send_to_all", $("#m").val());        
       }
-    }else if ($("#info").hide()) {
+    }else if ($("#inname").html()==null) {
       e.preventDefault(); // prevents page reloading
       socket.emit("send_to_all", $("#m").val());
     }
@@ -48,8 +48,7 @@ $("#roomb").click(function() {//create room
   }else{
     if ($("#in_room").val() == "") {
       alert("please enter room's name");
-      console.log($("#inname").html());
-    } else {
+    }else {
       var pass = prompt("enter your room password");
       if(pass!=null && pass!=""){
         socket.emit("setRoom", { roomName: $("#in_room").val(), username: $("#inputuse").val(), pass_room : pass });//sending room password
@@ -90,21 +89,18 @@ socket.on("list_room", function(room) {
   });
 });
 
-var name;
-
 socket.on("change_user", function(data) {
   $("#messages").append("<li>" + data.user + " is connect"); // connected user notication
-  name=data.user;
   socket.on("update", function(list) {// update online user
     $("#online_user").empty();
     $.each(list, function(username) {
       $("#online_user").append("<li>" + username);
     });
-    //update list user to select user
+    //update list user to select user    
     $("#inboxuser").empty();
     $("#inboxuser").append("<option>chat room</option>");
-    $.each(list, function(username) {
-      if(username!=name){  
+    $.each(list, function(username) {    
+      if(username.localeCompare($('#inname').text().trim())!=0){                
         $("#inboxuser").append("<option>" + username + "</option>");
       }
     });
@@ -113,7 +109,7 @@ socket.on("change_user", function(data) {
 
 socket.on("get_info",function(data){
   $("#info").show();
-  $("#inname").empty();
+  $("#inname").remove();
   $("#info").append('<span id ="inname"> '+ data.user +'</span>');
 })
 

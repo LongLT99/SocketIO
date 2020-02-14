@@ -44,14 +44,13 @@ io.on("connection", function(socket) {
       list[data.username] = data.username;
       io.emit("change_user", { user: socket.username });
       io.to(ID[socket.username]).emit("get_info",{ user: socket.username });
-      
+      io.to(ID[socket.username]).emit("list_friends", list, ID[socket.username]);
       socket.emit('list_room',room); 
       io.emit("update", list);
     }else{
       socket.emit('name_alert',{taken_name : data.username});
     }
   });
-
   socket.on("setSocketId", function(data) {//get socket id
     var userName = data.name;
     var userId = data.userId;
@@ -78,8 +77,8 @@ io.on("connection", function(socket) {
         socket.RoomName = data.roomName;        
         socket.join(data.roomName);
         mem[socket.RoomName] += 1;        
-    }else{
-      io.to(ID[data.username]).emit('join_alert',{room_name : data.roomName});
+    }else{     
+      io.to(ID[socket.username]).emit('join_alert',{room_name : data.roomName});
     }
   });
 
