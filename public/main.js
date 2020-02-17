@@ -52,6 +52,7 @@ $("#roomb").click(function() {//create room
       var pass = prompt("enter your room password");
       if(pass!=null && pass!=""){
         socket.emit("setRoom", { roomName: $("#in_room").val(), username: $("#inputuse").val(), pass_room : pass });//sending room password
+        $("#in_room").val("");  
       }else{
         alert("create room fail");
       }
@@ -64,7 +65,7 @@ socket.on('name_alert',function(name){
 
 $("#roomj").click(function() {
   if($("#room_name").val()=="all"){
-    alert("all is not a room if dont have any create one");
+    alert("now you can chat all");
   }else if($('#inname').html() == null){
     alert("you must create user name fist to join room !!!")
   }else{    
@@ -87,6 +88,19 @@ socket.on("list_room", function(room) {
   $.each(room, function(username) {
     $("#room_name").append("<option>" + username + "</option>");
   });
+});
+
+socket.on("list_yroom", function(room, namer){
+  $("#room_name").empty();
+  $("#room_name").append("<option>" + "all" + "</option>");
+  $.each(room, function(username) {
+    $("#room_name").append("<option>" + username + "</option>");
+  });
+  alert("now you in room " + namer);
+  $("#room_info").show();
+  $("#rname").remove();
+  $("#room_info").append('<span id ="rname"> '+ namer +'</span>');
+  $("#room_name").val(namer);
 });
 
 socket.on("change_user", function(data) {

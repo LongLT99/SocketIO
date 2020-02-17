@@ -64,7 +64,7 @@ io.on("connection", function(socket) {
       pass[data.roomName] = data.pass_room;
       socket.join(data.roomName);
       mem[socket.RoomName] = 1;
-      socket.emit('list_room',room);   // sending to sender
+      socket.emit('list_yroom',room ,socket.RoomName);   // sending to sender
       socket.broadcast.emit('list_room',room);   // sending to all clients except sender 
     } else {// room name is taken. Try another
       io.to(ID[data.username]).emit('room_alert',{room_name : data.roomName});
@@ -76,7 +76,9 @@ io.on("connection", function(socket) {
         delete_room(socket.RoomName);
         socket.RoomName = data.roomName;        
         socket.join(data.roomName);
-        mem[socket.RoomName] += 1;        
+        mem[socket.RoomName] += 1; 
+        socket.emit('list_yroom',room);   // sending to sender
+        socket.broadcast.emit('list_room',room);   // sending to all clients except sender        
     }else{     
       io.to(ID[socket.username]).emit('join_alert',{room_name : data.roomName});
     }

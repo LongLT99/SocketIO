@@ -6,7 +6,17 @@
   max-height: 80px;
 }
 
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 #info{
+  display: none;
+}
+
+#room_info{
   display: none;
 }
 
