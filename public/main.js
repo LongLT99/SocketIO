@@ -5,14 +5,14 @@ $("#send_button").click(function() {
 $("form").submit(function(e) {
   if($("#m").val()!=""){// not empty mess
     if ($("#inboxuser option:selected").text() == "chat room") {
-      if($("#room_name option:selected").text() != "all"){
+      if($("#room_name option:selected").text() != "" && $("#rname").html()!=""){
         e.preventDefault(); // prevents page reloading
         socket.emit("send_to_room", $("#m").val());
       }else{
         e.preventDefault();
         socket.emit("send_to_all", $("#m").val());        
       }
-    }else if ($("#inname").html()==null) {
+    }else if ($("#inname").html()==null || $("#inboxuser option:selected").text() == "chat all") {
       e.preventDefault(); // prevents page reloading
       socket.emit("send_to_all", $("#m").val());
     }
@@ -64,8 +64,8 @@ socket.on('name_alert',function(name){
 });
 
 $("#roomj").click(function() {
-  if($("#room_name").val()=="all"){
-    alert("now you can chat all");
+  if($("#room_name").val()==""){
+    alert("there is no room please create one");
   }else if($('#inname').html() == null){
     alert("you must create user name fist to join room !!!")
   }else{    
@@ -84,7 +84,6 @@ socket.on('join_alert',function(data){
 
 socket.on("list_room", function(room) {
   $("#room_name").empty();
-  $("#room_name").append("<option>" + "all" + "</option>");
   $.each(room, function(username) {
     $("#room_name").append("<option>" + username + "</option>");
   });
@@ -92,7 +91,6 @@ socket.on("list_room", function(room) {
 
 socket.on("list_yroom", function(room, namer){
   $("#room_name").empty();
-  $("#room_name").append("<option>" + "all" + "</option>");
   $.each(room, function(username) {
     $("#room_name").append("<option>" + username + "</option>");
   });
@@ -112,6 +110,7 @@ socket.on("change_user", function(data) {
     });
     //update list user to select user    
     $("#inboxuser").empty();
+    $("#inboxuser").append("<option>chat all</option>");
     $("#inboxuser").append("<option>chat room</option>");
     $.each(list, function(username) {    
       if(username.localeCompare($('#inname').text().trim())!=0){                
@@ -130,7 +129,6 @@ socket.on("get_info",function(data){
 socket.on("leave", function(user, room) {
   $("#messages").append("<li>" + user + " is disconnect"); // disconnected user notication
   $("#room_name").empty();
-  $("#room_name").append("<option>" + "all" + "</option>");
   $.each(room, function(username) {
     $("#room_name").append("<option>" + username + "</option>");
   });
