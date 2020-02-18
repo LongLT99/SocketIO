@@ -30,7 +30,7 @@ async function init(e) {// click the video button
     $("#modal_title").empty();
     $("#modal_title").removeClass().addClass("text-dark").append("Calling");
     socket.emit("calling", $("#inboxuser option:selected").text(), peer.id);//sending peer id to call
-    $("#modal_id").modal();
+    $("#modal_id").modal();    
   }
 }
 
@@ -49,15 +49,17 @@ $("#modal_id").on("hidden.bs.modal", function hidden_modal() {
 });
 
 socket.on("answer_call", function(data, id) {
+  $("#modalc").append(data.username + " is calling")
   if(checkCall ==true){
     socket.emit("deny_call", {
       callerName: data.username,
       answerName: data.targetname
     });
   }else{
-    var id = id.callID;
-  var r = confirm(data.username + " is calling");
-  if (r == true) {
+  var id = id.callID;
+  $("#modal_t").modal();
+  $("#button_ac").click(function(){
+    $("#modal_t").modal("hide");
     $("#modal_id").modal();
     //call
     openStream().then(stream => {
@@ -76,15 +78,14 @@ socket.on("answer_call", function(data, id) {
     });
     $("#modal_title").empty();
     $("#modal_title").removeClass().addClass("text-success").append(data.username + " has connected");
-    socket.emit("accept_call", {
-      callerName: data.username
-    });
-  } else {
+    socket.emit("accept_call", { callerName : data.username });
+  });
+  $("#button_de").click( function() {
     socket.emit("deny_call", {
       callerName: data.username,
       answerName: data.targetname
     });
-  }
+  });
   }
 });
 
@@ -93,6 +94,7 @@ peer.on("call", call => {
   openStream().then(stream => {
     call.answer(stream);
     playStream("local_video", stream);
+    checkCall=true;
     call.on("stream", remoteStream => playStream("user_video", remoteStream));
   });
   call.on("close", function() {

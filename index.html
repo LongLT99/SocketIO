@@ -77,6 +77,24 @@
     </div>
   </div>
 
+  <!-- answer modal -->
+  <div class="modal" id="modal_t" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">You have a call</h5>
+        </div>
+        <div class="modal-body">
+          <p id="modalc"></p>
+        </div>
+        <div class="modal-footer">
+          <button id="button_ac" type="button" class="btn btn-success">Accept</button>
+          <button id="button_de" type="button" class="btn btn-danger" data-dismiss="modal">Decline</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- video call modal -->
   <div class="modal" tabindex="-1" role="dialog" id="modal_id">
     <div class="modal-dialog modal-xl" role="document">
@@ -87,14 +105,13 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body d-flex justify-content-center  ">
-          <video id="local_video" width="400" autoplay playsinline></video>
-          <div class="vl"></div>
+        <div id="tovideo" class="modal-body d-flex justify-content-center">
           <video id="user_video" width="400" autoplay playsinline></video>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <video id="local_video" width="100" autoplay playsinline></video>
         </div>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

@@ -67,7 +67,7 @@ io.on("connection", function(socket) {
       socket.emit('list_yroom',room ,socket.RoomName);   // sending to sender
       socket.broadcast.emit('list_room',room);   // sending to all clients except sender 
     } else {// room name is taken. Try another
-      io.to(ID[data.username]).emit('room_alert',{room_name : data.roomName});
+      socket.emit('room_alert',{room_name : data.roomName});
     }
   });
   socket.on("joinRoom", function(data){
