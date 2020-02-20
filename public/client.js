@@ -2,7 +2,7 @@ const constraints = (window.constraints = {
   audio: true,
   video: true
 });
-
+var type;
 const localvideo = document.querySelector("video#local_video");
 const uservideo = document.querySelector("video#user_video");
 var checkCall= false;
@@ -10,7 +10,7 @@ var checkCall= false;
 const peer = new Peer({ key: "lwjd5qra8257b9" });
 peer.on("open", function() {
   console.log(peer.id);
-  socket.emit("peerID", { peerID: peer.id });
+  socket.emit("peerID", {userId: socket.id , peerID: peer.id });
 });
 peer.on("error", function(err) {
   console.log(err);
@@ -24,7 +24,7 @@ if (vb) {
 async function init(e) {// click the video button
   if ($("#inname").html()==null) {
     alert("hey you dont have a name");
-  } else if ( $("#inboxuser option:selected").text() == "chat room" ){
+  } else if ( $("#inboxuser option:selected").text() == "chat room" ||  $("#inboxuser option:selected").text() == "chat all"){
     alert("please select friend's name to call");
   } else {
     $("#modal_title").empty();
@@ -59,6 +59,7 @@ socket.on("answer_call", function(data, id) {
   var id = id.callID;
   $("#modal_t").modal();
   $("#button_ac").click(function(){
+    socket.emit("checktype",data.username)
     $("#modal_t").modal("hide");
     $("#modal_id").modal();
     //call
@@ -69,6 +70,7 @@ socket.on("answer_call", function(data, id) {
       const call = peer.call(id, stream);
       call.on("stream", remoteStream => playStream("user_video", remoteStream));
       call.on("close", function() {
+        type=0;
         checkCall=false;
         disconnectedNoti();
       });
@@ -89,21 +91,48 @@ socket.on("answer_call", function(data, id) {
   }
 });
 
+socket.on("gettype",function(data){
+  type=data;
+})
+var i=0;
 //answer call
-peer.on("call", call => {
-  openStream().then(stream => {
-    call.answer(stream);
-    playStream("local_video", stream);
-    checkCall=true;
-    call.on("stream", remoteStream => playStream("user_video", remoteStream));
-  });
-  call.on("close", function() {
-    checkCall=false;
-    disconnectedNoti();
-  });
-  $("#modal_id").on("hidden.bs.modal", function() {
-    call.close();
-  });
+peer.on("call", function(call){
+  if(type == 1){
+    console.log("waww");    
+    openStream().then(stream => {
+      call.answer(stream);
+      playStream("local_video", stream);
+      checkCall=true;
+      call.on("stream", remoteStream => playStream("user_video", remoteStream));
+    });
+    call.on("close", function() {
+      checkCall=false;
+      disconnectedNoti();
+    });
+    $("#modal_id").on("hidden.bs.modal", function() {
+      call.close();
+    });
+  }else{
+        if (i<5){
+          i+=1;
+        }else{
+          i=1;
+        }
+        addvideo(i);
+        openStream().then(stream => {
+          call.answer(stream);
+          playStream("local_vi", stream);
+          checkCall=true;
+          call.on("stream", remoteStream => playStream(i, remoteStream));
+        });
+        call.on("close", function() {
+          checkCall=false;
+          disconnectedNoti();
+        });
+        $("#modal_g").on("hidden.bs.modal", function() {
+          call.close();
+        });
+      }
 });
 //deny call
 socket.on("deny_noty", function(data) {
@@ -124,7 +153,8 @@ function openStream() {
 
 function playStream(idVideoTag, stream) {
   const video = document.getElementById(idVideoTag);
-  video.srcObject = stream;
+  console.log(video);   
+  video.srcObject = stream; 
   video.play();
 }
 

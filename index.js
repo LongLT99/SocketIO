@@ -16,6 +16,7 @@ var ID = {};
 var room = {};
 var pass = {};
 var mem = [];
+var peer ={};
 io.on("connection", function(socket) {
   io.emit("update", list);
   io.emit("getID", ID);
@@ -104,6 +105,10 @@ io.on("connection", function(socket) {
     io.to(ID[toname]).emit( "chat private", { msg: msg, username: socket.username }, { touser: toname } );
   });
 
+  socket.on('peerID', function(id){
+    peer[id.userId]= id.peerID;
+  });
+
   socket.on("calling", function(target, peerID) {//get peerid from the caller
     io.to(ID[target]).emit( "answer_call", { username: socket.username, targetname: target }, { callID: peerID } );
   });
@@ -125,6 +130,25 @@ io.on("connection", function(socket) {
     }else{
       socket.broadcast.emit('is_not_typing',name);
     }
+  });
+  socket.on("checktype",function(data){
+    const a=1
+    io.to(ID[data]).emit('gettype',a);
+  })
+
+  var pname
+  socket.on("add_call", function(name, caller, call){
+    pname =ID[name];
+    if(pname == null){
+      socket.emit('no_name',name);
+    }else{
+      io.to(ID[name]).emit("g_call", caller, call, peer[pname]);
+      socket.emit("pull_peer", name, peer[pname]);
+    }
+  });
+  socket.on('to_mem', function(target,caller){
+    pname =ID[target];
+    io.to(ID[caller]).emit("up_mem",peer[pname]);
   });
 });
 

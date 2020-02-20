@@ -263,7 +263,7 @@ div.dropdown-menu.show{
   width: 250px;
 }
 
-#game{
+#group{
   width: 6%;
   color: #fff;
   background-color: rgb(140, 88, 184);
@@ -274,4 +274,9 @@ div.dropdown-menu.show{
 
 #game_icon{
   width: 35%;
+}
+
+#add_n{
+  margin-left: 50px;
+  margin-right: 10px;
 }

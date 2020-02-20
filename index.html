@@ -116,6 +116,67 @@
     </div>
   </div>
 
+  <!-- group call -->
+  <div class="modal" tabindex="-1" role="dialog" id="modal_g">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header row">
+            <h5 class="modal-title colum col-4" style="margin-left: 5px;">Calling</h5>
+            <input class="colum col-5" type="text" id="add_n">
+            <button type="button" class="btn btn-success col-1" id="add" >Add</button>
+            <button type="button" class="close col-1" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div id="videoc" class="modal-body d-flex justify-content-center row">
+          <video id="user_vi" width="400" autoplay playsinline></video>
+        </div>
+        <div class="modal-footer">
+            <video id="local_vi" width="100" autoplay playsinline></video>
+        </div>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal error-->
+<div id="noname" class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger">Error!!! </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="alert_no"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal alert group-->
+<div id="modal_cg" class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-secondary">You have a group call</h5>
+      </div>
+      <div class="modal-body">
+        <p id="alert_g">eeeeeeeeeeeeeee</p>
+      </div>
+      <div class="modal-footer">
+        <button id="b_ac" type="button" class="btn btn-success">Accept</button>
+        <button id="b_de" type="button" class="btn btn-danger" data-dismiss="modal">Decline</button>
+      </div>
+    </div>
+  </div>
+</div>
+
   <!-- sending message form -->
   <div>
     <form action="">
@@ -135,7 +196,7 @@
         <input type="text" id="m" autocomplete="off" />
         <button type="button" id="send_button"><img id="send_icon" src="/img/email.png" class="center"></button>
         <button type="button" id="video_button" ><img id="vcall_icon" src="/img/communications.png" class="center"></button>
-        <button type="button" id="game"><img id="game_icon" src="/img/game-controller.png"  class="center"></button>
+        <button type="button" id="group"><img id="game_icon" src="/img/video-chat.png"  class="center"></button>
       </div>
     </form>
   </div>
@@ -143,6 +204,7 @@
   <script src="main.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/peerjs@0.3.20/dist/peer.min.js"></script>
   <script src="client.js"></script>
+  <script src="group.js"></script>
   <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 
 </body>
