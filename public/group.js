@@ -1,85 +1,58 @@
 var call ={};
 var caller = {};
-$("#group").click(function(){ 
+$("#group").click(function(){// start video call group 
     if($("#inname").html()==null){
         alert("you need a name to call !!!")
     }else{
         $("#modal_g").modal();
         $("#add").click(function(){
-            call[$("#inname").text().trim()]=peer.id;
-            caller[$("#inname").html().trim()] = $("#inname").html().trim();
-            socket.emit("add_call",$("#add_n").val(), caller, call);
+            if($("#inname").text().trim().localeCompare($("#add_n").val())!=0){
+                call[$("#inname").text().trim()]=peer.id;// call= {name : peer id}//list peer id by name
+                caller[$("#inname").html().trim()] = $("#inname").html().trim();// list members in group videocall
+                socket.emit("add_call",$("#add_n").val(), caller, call);
+            }else{
+                $("#noname").modal();
+                $("#alert_no").empty();
+                $("#alert_no").append("<p>you can not call yourself</p>");
+            }
         });
     }
-})
-var idc;
-var idd;
+});
+
 socket.on('g_call',function(caller,call, id){
     $("#alert_g").empty();
+    $("#alert_g").append("<p>from :</p>")
     $.each(caller, function(callname) {
         if(callname.localeCompare($('#inname').text().trim())!=0){
-            $("#alert_g").append("<span> " + callname + "</span>");
+            $("#alert_g").append("<span> " + callname + ",</span>");
         }        
     });
-    idc= 0;
     $("#modal_cg").modal();
-    $("#b_ac").click(function(){
-        addvideo(idc+1);      
-        caller[$('#inname').text().trim()]=$('#inname').text();
-        call[$('#inname').text().trim()]=id;
+    $("#b_ac").click(function(){ //accepct group call
+        caller[$('#inname').text().trim()]=$('#inname').text().trim();// add new member
+        call[$('#inname').text().trim()]=id;// add new peer id
+        socket.emit("new_mem",caller,$('#inname').text().trim());
         $("#modal_cg").modal("hide");
         $("#modal_g").modal();
-        idd=0;
-        // for(x in call ){
-        //     if(x.localeCompare($('#inname').text().trim())!=0){
-        //         console.log(call[x]);
-        //         idd = call[x];
-        //         if(idc<5){
-        //             idc+=1;
-        //         }else{
-        //             idc=1;
-        //         }
-        //         console.log(idc);
-        //         if(idd!=0){
-        //             openStream().then(stream => {
-        //                 checkCall =true;
-        //                 playStream("local_vi", stream);
-        //                 const call = peer.call(idd, stream);
-        //                 call.on("stream", remoteStream => playStream(idc, remoteStream));
-        //                 call.on("close", function() {
-        //                   checkCall=false;
-        //                   disconnectedNoti();
-        //                 });
-        //                 $("#modal_g").on("hidden.bs.modal", function() {
-        //                   call.close();
-        //                 });
-        //               });
-        //         }     
-        //     }
-        // }
-        for(x in call){
-            if(x.localeCompare($('#inname').text().trim())!=0){
-                socket.emit("to_mem",$('#inname').text().trim(),x);                 
-            }
-        }       
+        socket.emit("to_mem", caller, $('#inname').text().trim());//send new mem name to mems     
     });
 });
 
-socket.on('pull_peer', function(name,id){
+socket.on('up_info',function(name,id){// update info for old members
     call[name]=id;
     caller[name]=name;
-    console.log(call); 
     $("#add_n").val("");
-    console.log(caller);
 });
 
 socket.on("no_name", function(name){//wrong name alert
-    $("#alert_no").append("There is no user name :"+name );
+    $("#alert_no").empty();
+    $("#alert_no").append("There is no user name : "+name );
     $("#noname").modal();
     $("#add_n").val("");   
 });
+
 socket.on("up_mem",function(id){
-            addvideo(id);       
+            addvideo(id);
             openStream().then(stream => {
                 checkCall =true;
                 playStream("local_vi", stream);
@@ -87,9 +60,8 @@ socket.on("up_mem",function(id){
                 call.on("stream", remoteStream => playStream(id, remoteStream));
                 call.on("close", function() {
                   checkCall=false;
-                  disconnectedNoti();
                 });
-                $("#modal_id").on("hidden.bs.modal", function() {
+                $("#modal_g").on("hidden.bs.modal", function() {
                   call.close();
                 });
               });
@@ -101,5 +73,4 @@ function addvideo(peer){
           '<video id="' + peer + '" class="col px-0" autoplay playsinline style="width: 50%;"></video>' +
           '</div>')  
     }
-
 }

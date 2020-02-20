@@ -17,6 +17,7 @@ var room = {};
 var pass = {};
 var mem = [];
 var peer ={};
+
 io.on("connection", function(socket) {
   io.emit("update", list);
   io.emit("getID", ID);
@@ -131,24 +132,37 @@ io.on("connection", function(socket) {
       socket.broadcast.emit('is_not_typing',name);
     }
   });
-  socket.on("checktype",function(data){
+  socket.on("checktype",function(data){// call classification
     const a=1
     io.to(ID[data]).emit('gettype',a);
   })
 
   var pname
   socket.on("add_call", function(name, caller, call){
-    pname =ID[name];
+    pname =ID[name];// get socket id by name
     if(pname == null){
       socket.emit('no_name',name);
     }else{
-      io.to(ID[name]).emit("g_call", caller, call, peer[pname]);
-      socket.emit("pull_peer", name, peer[pname]);
+      io.to(ID[name]).emit("g_call", caller, call, peer[pname]);// send confirm alert to target
     }
   });
-  socket.on('to_mem', function(target,caller){
-    pname =ID[target];
-    io.to(ID[caller]).emit("up_mem",peer[pname]);
+
+  socket.on('new_mem',function(caller, newm){
+    pname =ID[newm];
+    for(x in caller){
+      if(x.localeCompare(newm)!=0){
+        io.to(ID[x]).emit("up_info", newm, peer[pname]);
+      }
+    }
+  });
+
+  socket.on('to_mem', function(caller, target){
+    for(x in caller){
+      if(x.localeCompare(target)!=0){
+        pname =ID[target];
+        io.to(ID[x]).emit("up_mem",peer[pname]);
+      }
+    }
   });
 });
 

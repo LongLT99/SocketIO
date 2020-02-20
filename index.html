@@ -17,14 +17,15 @@
 
 <body class="container-fluid">
   <title>Ocean box chat</title>
-  
+
   <nav class="row align-self-center navbar navbar-primary bg-primary">
     <span id="head" class="align-self-center navbar-brand mb-0 h1">
       <h1 class="align-middle">Ocean box chat</h1>
-      <div id="nameroom" class="row center" >
-        <h4 id="info" class="center">User name: </h4><h4 class="center" id="room_info" >Room :</h4>
+      <div id="nameroom" class="row center">
+        <h4 id="info" class="center">User name: </h4>
+        <h4 class="center" id="room_info">Room :</h4>
       </div>
-      
+
     </span>
   </nav>
   <!-- create user and room -->
@@ -109,7 +110,7 @@
           <video id="user_video" width="400" autoplay playsinline></video>
         </div>
         <div class="modal-footer">
-            <video id="local_video" width="100" autoplay playsinline></video>
+          <video id="local_video" width="100" autoplay playsinline></video>
         </div>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
@@ -121,18 +122,17 @@
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
         <div class="modal-header row">
-            <h5 class="modal-title colum col-4" style="margin-left: 5px;">Calling</h5>
-            <input class="colum col-5" type="text" id="add_n">
-            <button type="button" class="btn btn-success col-1" id="add" >Add</button>
-            <button type="button" class="close col-1" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+          <h5 class="modal-title colum col-4" style="margin-left: 5px;">Calling</h5>
+          <input class="colum col-5" type="text" id="add_n">
+          <button type="button" class="btn btn-success col-1" id="add">Add</button>
+          <button type="button" class="close col-1" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
         <div id="videoc" class="modal-body d-flex justify-content-center row">
-          <video id="user_vi" width="400" autoplay playsinline></video>
         </div>
         <div class="modal-footer">
-            <video id="local_vi" width="100" autoplay playsinline></video>
+          <video id="local_vi" width="100px" autoplay playsinline></video>
         </div>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
@@ -140,42 +140,44 @@
   </div>
 
   <!-- Modal error-->
-<div id="noname" class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title text-danger">Error!!! </h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p id="alert_no"></p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+  <div id="noname" class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-danger">Error!!! </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p id="alert_no"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Modal alert group-->
-<div id="modal_cg" class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title text-secondary">You have a group call</h5>
-      </div>
-      <div class="modal-body">
-        <p id="alert_g">eeeeeeeeeeeeeee</p>
-      </div>
-      <div class="modal-footer">
-        <button id="b_ac" type="button" class="btn btn-success">Accept</button>
-        <button id="b_de" type="button" class="btn btn-danger" data-dismiss="modal">Decline</button>
+  <!-- Modal alert group-->
+  <div id="modal_cg" class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-secondary">You have a group call</h5>
+        </div>
+        <div class="modal-body">
+          <p id="alert_g"></p>
+        </div>
+        <div class="modal-footer">
+          <button id="b_ac" type="button" class="btn btn-success">Accept</button>
+          <button id="b_de" type="button" class="btn btn-danger" data-dismiss="modal">Decline</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
   <!-- sending message form -->
   <div>
@@ -186,7 +188,7 @@
         </select>
         <!-- Default dropup button -->
         <div class="btn-group dropup">
-          <button type="button" id="icon_button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" >
+          <button type="button" id="icon_button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
             <img id="smile" src="/img/happy.png">
           </button>
           <div class="dropdown-menu">
@@ -195,8 +197,9 @@
         </div>
         <input type="text" id="m" autocomplete="off" />
         <button type="button" id="send_button"><img id="send_icon" src="/img/email.png" class="center"></button>
-        <button type="button" id="video_button" ><img id="vcall_icon" src="/img/communications.png" class="center"></button>
-        <button type="button" id="group"><img id="game_icon" src="/img/video-chat.png"  class="center"></button>
+        <button type="button" id="video_button"><img id="vcall_icon" src="/img/communications.png"
+            class="center"></button>
+        <button type="button" id="group"><img id="game_icon" src="/img/video-chat.png" class="center"></button>
       </div>
     </form>
   </div>

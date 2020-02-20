@@ -2,10 +2,11 @@ const constraints = (window.constraints = {
   audio: true,
   video: true
 });
-var type;
-const localvideo = document.querySelector("video#local_video");
-const uservideo = document.querySelector("video#user_video");
+var type;// call type
+var i=0;//video count
 var checkCall= false;
+const localvideo = document.querySelector("video#local_video");
+const groupvideo = document.querySelector("video#local_vi");
 
 const peer = new Peer({ key: "lwjd5qra8257b9" });
 peer.on("open", function() {
@@ -37,6 +38,8 @@ async function init(e) {// click the video button
 //close modal video
 $("#modal_id").on("hidden.bs.modal", function hidden_modal() {
   const stream = localvideo.srcObject;
+  console.log(stream);
+  
   if (stream != null) {
     const tracks = stream.getTracks();
     tracks.forEach(function(track) {
@@ -45,6 +48,16 @@ $("#modal_id").on("hidden.bs.modal", function hidden_modal() {
     $("#video_button").prop("disabled", false);
   } else {
     $("#video_button").prop("disabled", false);
+  }
+});
+
+$("#modal_g").on("hidden.bs.modal", function hidden_modal() {  
+  const stream = groupvideo.srcObject;
+  if (stream != null) {
+    const tracks = stream.getTracks();
+    tracks.forEach(function(track) {
+      track.stop();
+    });
   }
 });
 
@@ -70,7 +83,6 @@ socket.on("answer_call", function(data, id) {
       const call = peer.call(id, stream);
       call.on("stream", remoteStream => playStream("user_video", remoteStream));
       call.on("close", function() {
-        type=0;
         checkCall=false;
         disconnectedNoti();
       });
@@ -91,10 +103,10 @@ socket.on("answer_call", function(data, id) {
   }
 });
 
-socket.on("gettype",function(data){
+socket.on("gettype",function(data){// type of call
   type=data;
-})
-var i=0;
+});
+
 //answer call
 peer.on("call", function(call){
   if(type == 1){
@@ -113,11 +125,7 @@ peer.on("call", function(call){
       call.close();
     });
   }else{
-        if (i<5){
-          i+=1;
-        }else{
-          i=1;
-        }
+        video_counter(i);
         addvideo(i);
         openStream().then(stream => {
           call.answer(stream);
@@ -152,14 +160,24 @@ function openStream() {
 }
 
 function playStream(idVideoTag, stream) {
-  const video = document.getElementById(idVideoTag);
-  console.log(video);   
+  const video = document.getElementById(idVideoTag);   
   video.srcObject = stream; 
   video.play();
 }
 
+
+
 function disconnectedNoti() {
   $("#endvideo").click();
+  type=0;
+}
+
+function video_counter(i){
+  if (i<5){
+    i+=1;
+  }else{
+    i=1;
+  }
 }
 
 function handleError(error) {
