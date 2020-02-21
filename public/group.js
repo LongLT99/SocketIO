@@ -2,18 +2,16 @@ var call ={};
 var caller = {};
 $("#group").click(function(){// start video call group 
     if($("#inname").html()==null){
-        alert("you need a name to call !!!")
+        $("#noname").modal();
+        $("#alert_no").empty();
+        $("#alert_no").append("you need a name to call !!!");
     }else{
         $("#modal_g").modal();
         $("#add").click(function(){
-            if($("#inname").text().trim().localeCompare($("#add_n").val())!=0){
+            if($("#add_g option:selected").text() != " Choose friend to call"){
                 call[$("#inname").text().trim()]=peer.id;// call= {name : peer id}//list peer id by name
                 caller[$("#inname").html().trim()] = $("#inname").html().trim();// list members in group videocall
-                socket.emit("add_call",$("#add_n").val(), caller, call);
-            }else{
-                $("#noname").modal();
-                $("#alert_no").empty();
-                $("#alert_no").append("<p>you can not call yourself</p>");
+                socket.emit("add_call",$("#add_g").val(), caller, call);
             }
         });
     }
@@ -41,15 +39,19 @@ socket.on('g_call',function(caller,call, id){
 socket.on('up_info',function(name,id){// update info for old members
     call[name]=id;
     caller[name]=name;
-    $("#add_n").val("");
 });
 
 socket.on("no_name", function(name){//wrong name alert
     $("#alert_no").empty();
     $("#alert_no").append("There is no user name : "+name );
-    $("#noname").modal();
-    $("#add_n").val("");   
+    $("#noname").modal(); 
 });
+
+socket.on("al_name",function(name){
+    $("#alert_no").empty();
+    $("#alert_no").append("You already called "+name );
+    $("#noname").modal();
+})
 
 socket.on("up_mem",function(id){// call to new member
             addvideo(id);
@@ -75,4 +77,4 @@ function addvideo(peer){
           '<video id="' + peer + '" class="col px-0" autoplay playsinline style="width: 50%;"></video>' +
           '</div>')
     }
-}
+};

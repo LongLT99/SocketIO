@@ -111,16 +111,21 @@ socket.on('join_alert',function(data){
 })
 
 socket.on("list_room", function(room) {
-  $("#room_name").empty();
-  $.each(room, function(username) {
-    $("#room_name").append("<option>" + username + "</option>");
+  //up date room name
+  $("#room_name").focus(function(){
+    $("#room_name").empty();
+    $.each(room, function(rname) {
+      $("#room_name").append("<option>" + rname + "</option>");
+    });
   });
 });
 
 socket.on("list_yroom", function(room, namer){
-  $("#room_name").empty();
-  $.each(room, function(username) {
-    $("#room_name").append("<option>" + username + "</option>");
+  $("#room_name").focus(function(){
+    $("#room_name").empty();
+    $.each(room, function(rname) {
+      $("#room_name").append("<option>" + rname + "</option>");
+    });
   });
   $("#success").modal();
   $("#alert_su").empty();
@@ -129,6 +134,7 @@ socket.on("list_yroom", function(room, namer){
   $("#room_info").show();
   $("#rname").remove();
   $("#room_info").append('<span id ="rname"> '+ namer +'</span>');
+  $("#room_name").append("<option>" + namer + "</option>");
   $("#room_name").val(namer);
 });
 
@@ -149,6 +155,14 @@ socket.on("change_user", function(data) {
         }
       });
     });
+    //update user for chat call
+    $("#add_g").empty();
+    $("#add_g").append("<option> Choose friend to call</option>");
+    for(x in list){
+      if(x.localeCompare($('#inname').text().trim())!=0){
+        $("#add_g").append("<option>"+x+"</option>");
+      }
+    }
   });
 });
 

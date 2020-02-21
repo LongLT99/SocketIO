@@ -137,14 +137,24 @@ io.on("connection", function(socket) {
     io.to(ID[data]).emit('gettype',a);
   })
 
-  var pname
+  var pname;
+  var al_check;
   socket.on("add_call", function(name, caller, call){
-    pname =ID[name];// get socket id by name
-    if(pname == null){
-      socket.emit('no_name',name);
-    }else{
-      io.to(ID[name]).emit("g_call", caller, call, peer[pname]);// send confirm alert to target
+    al_check=0;
+    for(x in caller){
+      if(x.localeCompare(name)==0)
+        al_check=1;
     }
+    if(al_check==1){
+      socket.emit('al_name',name);
+    }else{
+      pname =ID[name];// get socket id by name
+      if(pname == null){
+        socket.emit('no_name',name);
+      }else{
+        io.to(ID[name]).emit("g_call", caller, call, peer[pname]);// send confirm alert to target
+      }
+    }    
   });
 
   socket.on('new_mem',function(caller, newm){

@@ -24,9 +24,13 @@ if (vb) {
 
 async function init(e) {// click the video button
   if ($("#inname").html()==null) {
-    alert("hey you dont have a name");
-  } else if ( $("#inboxuser option:selected").text() == "chat room" ||  $("#inboxuser option:selected").text() == "chat all"){
-    alert("please select friend's name to call");
+    $("#noname").modal();
+    $("#alert_no").empty();
+    $("#alert_no").append("hey you dont have a name !!!");
+  } else if ( $("#inboxuser option:selected").text() == "Choose friends ..."||$("#inboxuser").val() == ""){
+    $("#noname").modal();
+    $("#alert_no").empty();
+    $("#alert_no").append("please select friend's name to call !!!");
   } else {
     $("#modal_title").empty();
     $("#modal_title").removeClass().addClass("text-dark").append("Calling");
