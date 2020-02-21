@@ -25,7 +25,7 @@ socket.on('g_call',function(caller,call, id){
     $.each(caller, function(callname) {
         if(callname.localeCompare($('#inname').text().trim())!=0){
             $("#alert_g").append("<span> " + callname + ",</span>");
-        }        
+        }
     });
     $("#modal_cg").modal();
     $("#b_ac").click(function(){ //accepct group call
@@ -51,7 +51,7 @@ socket.on("no_name", function(name){//wrong name alert
     $("#add_n").val("");   
 });
 
-socket.on("up_mem",function(id){
+socket.on("up_mem",function(id){// call to new member
             addvideo(id);
             openStream().then(stream => {
                 checkCall =true;
@@ -64,6 +64,7 @@ socket.on("up_mem",function(id){
                 $("#modal_g").on("hidden.bs.modal", function() {
                   call.close();
                   $("#videoc").empty();
+                  stream.getTracks()[0].stop();
                 });
               });
 });
@@ -72,6 +73,6 @@ function addvideo(peer){
     if (!$("#" + peer).length) {
         $("#videoc").append('<div class="col" >' +
           '<video id="' + peer + '" class="col px-0" autoplay playsinline style="width: 50%;"></video>' +
-          '</div>')  
+          '</div>')
     }
 }

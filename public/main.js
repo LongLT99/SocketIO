@@ -14,7 +14,7 @@ $("form").submit(function(e) {
         $("#alert_no").append("you need in a room to chat room !!!");
       }
     }else if ($("#chat-type option:selected").text() == "chat all") {
-      e.preventDefault(); // prevents page reloading
+      e.preventDefault();
       socket.emit("send_to_all", $("#m").val());
     }
     else {
@@ -52,7 +52,7 @@ socket.on('room_alert',function(room){
   $("#alert_no").append("already had room name : "+ room.room_name);
 });
 
-
+//room
 $("#roomb").click(function() {//create room
   if($('#inname').html()==null){
     $("#noname").modal();
@@ -76,6 +76,7 @@ $("#roomb").click(function() {//create room
     }
   }
 });
+
 socket.on('name_alert',function(name){
   $("#noname").modal();
   $("#alert_no").empty();
@@ -124,6 +125,7 @@ socket.on("list_yroom", function(room, namer){
   $("#success").modal();
   $("#alert_su").empty();
   $("#alert_su").append("now you in room " + namer);
+  //show room info
   $("#room_info").show();
   $("#rname").remove();
   $("#room_info").append('<span id ="rname"> '+ namer +'</span>');
@@ -150,7 +152,7 @@ socket.on("change_user", function(data) {
   });
 });
 
-socket.on("get_info",function(data){
+socket.on("get_info",function(data){// show info user to menu bar
   $("#info").show();
   $("#inname").remove();
   $("#info").append('<span id ="inname"> '+ data.user +'</span>');
@@ -164,23 +166,25 @@ socket.on("leave", function(user, room) {
   });
 });
 
-socket.on("send_to_clien", function(data) {
+socket.on("send_to_clien", function(data) {// chat room
   $("#messages").append("<li>" + data.username + ": " + data.msg); // send message
   $("#cbox").scrollTop($("#messages").height());
 });
 
-socket.on("chat_all", function(data){
+socket.on("chat_all", function(data){// chat all
   $("#messages").append("<li>" + data.username + " to all : " + data.msg);
   $("#cbox").scrollTop($("#messages").height());
 });
 
-socket.on("chat private", function(data, to) {// inbox private
+socket.on("chat private", function(data, to) {// caht private
   $("#privates").append("<li> from " + data.username + " to " + to.touser + ": " + data.msg); // send private message
   $("#ibox").scrollTop($("#ibox").height());
   $("#refresh").click(function() {// refresh button
     $("#privates").empty();
   });
 });
+
+// chat emoji
 var iconid = 128512;
 $('#icon_button').click(function(){
   while(iconid < 128592){  
@@ -191,24 +195,4 @@ $('#icon_button').click(function(){
 
 function pick_emoji(emoji) {
   $("#m").val($("#m").val() + $(emoji).html()).focus();
-}
-
-$("#m").focus(function(){
-    if($('#inboxuser').val() == "chat room"){
-      const check_t=1;
-      socket.emit('typing',$('#inname').text(),check_t);
-    }
-})
-
-$("#m").focusout(function(){
-    const check_f=0;
-    socket.emit('typing',$('#inputuse').val(),check_f);
-})
-
-socket.on('is_typing', function(name){
-    $("#typing").empty();
-    $("#typing").append(name + " is typing ...");
-});
-socket.on("is_not_typing",function(name){
-  $("#typing").empty();
-})
+};

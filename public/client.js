@@ -39,7 +39,6 @@ async function init(e) {// click the video button
 $("#modal_id").on("hidden.bs.modal", function hidden_modal() {
   const stream = localvideo.srcObject;
   console.log(stream);
-  
   if (stream != null) {
     const tracks = stream.getTracks();
     tracks.forEach(function(track) {
@@ -51,16 +50,7 @@ $("#modal_id").on("hidden.bs.modal", function hidden_modal() {
   }
 });
 
-$("#modal_g").on("hidden.bs.modal", function hidden_modal() {  
-  const stream = groupvideo.srcObject;
-  console.log(stream);  
-  if (stream != null) {
-    const tracks = stream.getTracks();
-    tracks.forEach(function(track) {
-      track.stop();
-    });
-  }
-});
+// answer
 
 socket.on("answer_call", function(data, id) {
   $("#modalc").append(data.username + " is calling")
@@ -131,20 +121,22 @@ peer.on("call", function(call){
         }else{
           i=1;
         }
-        addvideo(i);       
+        console.log(i);       
+        addvideo(i);     
         openStream().then(stream => {
           call.answer(stream);
           playStream("local_vi", stream);
           checkCall=true;
           call.on("stream", remoteStream => playStream(i, remoteStream));
-        });
-        call.on("close", function() {
-          checkCall=false;
-        });
-        $("#modal_g").on("hidden.bs.modal", function() {
-          call.close();
-          $("#videoc").empty();
-        });
+          call.on("close", function() {
+            checkCall=false;
+          });
+          $("#modal_g").on("hidden.bs.modal", function() {
+            call.close();
+            $("#videoc").empty();
+            stream.getTracks()[0].stop();
+          });
+        });        
       }
 });
 //deny call
