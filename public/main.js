@@ -46,11 +46,45 @@ $("#buton").click(function() {//create user
   $("#inputuse").val("");
 });
 
-socket.on('room_alert',function(room){
+socket.on("change_user", function(data) {
+  $("#messages").append("<li>" + data.user + " is connect"); // connected user notication
+  socket.on("update", function(list) {// update online user
+    $("#online_user").empty();
+    $.each(list, function(username) {
+      $("#online_user").append("<li>" + username);
+    });
+    //update list user to select user
+    $("#inboxuser").focus(function(){
+      $("#inboxuser").empty();
+      $("#inboxuser").append("<option>Choose friends ...</option>");
+      $.each(list, function(username) {
+        if(username.localeCompare($('#inname').text().trim())!=0){
+          $("#inboxuser").append("<option>" + username + "</option>");
+        }
+      });
+    });
+    //update user for chat call
+    $("#add_g").empty();
+    $("#add_g").append("<option> Choose friend to call</option>");
+    for(x in list){
+      if(x.localeCompare($('#inname').text().trim())!=0){
+        $("#add_g").append("<option>"+x+"</option>");
+      }
+    }
+  });
+});
+
+socket.on('name_alert',function(name){
   $("#noname").modal();
   $("#alert_no").empty();
-  $("#alert_no").append("already had room name : "+ room.room_name);
+  $("#alert_no").append(name.taken_name + " is taken. Try another");
 });
+
+socket.on("get_info",function(data){// show info user to menu bar
+  $("#info").show();
+  $("#inname").remove();
+  $("#info").append('<span id ="inname"> '+ data.user +'</span>');
+})
 
 //room
 $("#roomb").click(function() {//create room
@@ -77,13 +111,13 @@ $("#roomb").click(function() {//create room
   }
 });
 
-socket.on('name_alert',function(name){
+socket.on('room_alert',function(room){
   $("#noname").modal();
   $("#alert_no").empty();
-  $("#alert_no").append(name.taken_name + " is taken. Try another");
+  $("#alert_no").append("already had room name : "+ room.room_name);
 });
 
-$("#roomj").click(function() {
+$("#roomj").click(function() {//join room
   if($("#room_name").val()==""){
     $("#noname").modal();
     $("#alert_no").empty();
@@ -92,6 +126,10 @@ $("#roomj").click(function() {
     $("#noname").modal();
     $("#alert_no").empty();
     $("#alert_no").append("you must create user name fist to join room !!!");
+  }else if($("#room_name").val()==$('#rname').html().trim()){
+    $("#noname").modal();
+    $("#alert_no").empty();
+    $("#alert_no").append("Already in room "+$('#rname').html().trim());
   }else{    
     var passr = prompt("enter room's password please ");
     if(passr!=null){
@@ -138,40 +176,6 @@ socket.on("list_yroom", function(room, namer){
   $("#room_name").val(namer);
 });
 
-socket.on("change_user", function(data) {
-  $("#messages").append("<li>" + data.user + " is connect"); // connected user notication
-  socket.on("update", function(list) {// update online user
-    $("#online_user").empty();
-    $.each(list, function(username) {
-      $("#online_user").append("<li>" + username);
-    });
-    //update list user to select user
-    $("#inboxuser").focus(function(){
-      $("#inboxuser").empty();
-      $("#inboxuser").append("<option>Choose friends ...</option>");
-      $.each(list, function(username) {
-        if(username.localeCompare($('#inname').text().trim())!=0){
-          $("#inboxuser").append("<option>" + username + "</option>");
-        }
-      });
-    });
-    //update user for chat call
-    $("#add_g").empty();
-    $("#add_g").append("<option> Choose friend to call</option>");
-    for(x in list){
-      if(x.localeCompare($('#inname').text().trim())!=0){
-        $("#add_g").append("<option>"+x+"</option>");
-      }
-    }
-  });
-});
-
-socket.on("get_info",function(data){// show info user to menu bar
-  $("#info").show();
-  $("#inname").remove();
-  $("#info").append('<span id ="inname"> '+ data.user +'</span>');
-})
-
 socket.on("leave", function(user, room) {
   $("#messages").append("<li>" + user + " is disconnect"); // disconnected user notication
   $("#room_name").empty();
@@ -180,6 +184,7 @@ socket.on("leave", function(user, room) {
   });
 });
 
+//Chat
 socket.on("send_to_clien", function(data) {// chat room
   $("#messages").append("<li>" + data.username + ": " + data.msg); // send message
   $("#cbox").scrollTop($("#messages").height());
@@ -201,7 +206,7 @@ socket.on("chat private", function(data, to) {// caht private
 // chat emoji
 var iconid = 128512;
 $('#icon_button').click(function(){
-  while(iconid < 128592){  
+  while(iconid < 128592){
     $("#emoji").append('<button type="button" id="icon_' + iconid + '" class="btn btn-light" style="width:20%; font-size:x-large" onclick="pick_emoji(\icon_' + iconid + '\)">&#' + iconid +';</button>');
     iconid +=1;
   }

@@ -154,7 +154,7 @@ io.on("connection", function(socket) {
       }else{
         io.to(ID[name]).emit("g_call", caller, call, peer[pname]);// send confirm alert to target
       }
-    }    
+    }
   });
 
   socket.on('new_mem',function(caller, newm){
