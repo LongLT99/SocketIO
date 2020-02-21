@@ -53,6 +53,7 @@ $("#modal_id").on("hidden.bs.modal", function hidden_modal() {
 
 $("#modal_g").on("hidden.bs.modal", function hidden_modal() {  
   const stream = groupvideo.srcObject;
+  console.log(stream);  
   if (stream != null) {
     const tracks = stream.getTracks();
     tracks.forEach(function(track) {
@@ -125,8 +126,12 @@ peer.on("call", function(call){
       call.close();
     });
   }else{
-        video_counter(i);
-        addvideo(i);
+        if (i<5){
+          i+=1;
+        }else{
+          i=1;
+        }
+        addvideo(i);       
         openStream().then(stream => {
           call.answer(stream);
           playStream("local_vi", stream);
@@ -135,10 +140,10 @@ peer.on("call", function(call){
         });
         call.on("close", function() {
           checkCall=false;
-          disconnectedNoti();
         });
         $("#modal_g").on("hidden.bs.modal", function() {
           call.close();
+          $("#videoc").empty();
         });
       }
 });
@@ -160,24 +165,15 @@ function openStream() {
 }
 
 function playStream(idVideoTag, stream) {
-  const video = document.getElementById(idVideoTag);   
+  const video = document.getElementById(idVideoTag);
+  console.log(video);
   video.srcObject = stream; 
   video.play();
 }
 
-
-
 function disconnectedNoti() {
   $("#endvideo").click();
   type=0;
-}
-
-function video_counter(i){
-  if (i<5){
-    i+=1;
-  }else{
-    i=1;
-  }
 }
 
 function handleError(error) {

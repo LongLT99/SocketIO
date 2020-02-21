@@ -140,7 +140,7 @@
   </div>
 
   <!-- Modal error-->
-  <div id="noname" class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  <div id="noname" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -152,6 +152,27 @@
         </div>
         <div class="modal-body">
           <p id="alert_no"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal success -->
+  <div id="success" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-success">Success </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p id="alert_su"></p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -195,11 +216,22 @@
             <ul id="emoji"></ul>
           </div>
         </div>
-        <input type="text" id="m" autocomplete="off" />
-        <button type="button" id="send_button"><img id="send_icon" src="/img/email.png" class="center"></button>
+        <!-- <input  type="text" id="m" autocomplete="off" /> -->
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <select class="colum" id="chat-type">
+              <option value="1">chat all</option>
+              <option value="2">chat room</option>
+              <option value="3">chat private</option>
+            </select>
+          </div>
+          <input type="text"  id="m" autocomplete="off" aria-describedby="inputGroupPrepend2" required>
+          <button type="button" id="send_button"><img id="send_icon" src="/img/email.png" class="center"></button>
         <button type="button" id="video_button"><img id="vcall_icon" src="/img/communications.png"
             class="center"></button>
         <button type="button" id="group"><img id="game_icon" src="/img/video-chat.png" class="center"></button>
+        </div>
+        
       </div>
     </form>
   </div>

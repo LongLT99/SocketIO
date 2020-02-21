@@ -63,6 +63,7 @@ socket.on("up_mem",function(id){
                 });
                 $("#modal_g").on("hidden.bs.modal", function() {
                   call.close();
+                  $("#videoc").empty();
                 });
               });
 });
