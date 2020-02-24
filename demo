@@ -1,0 +1,5 @@
+creat room -> success -> MRoom[]+1 <host> room (check_host=1);
+join room -> send request to host -> success MRoom[] +1
+
+* Old room after create and join MRoom[]-1
+* Host out roon -> send host to member

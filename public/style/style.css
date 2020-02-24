@@ -42,9 +42,11 @@ body {
 }
 
 #buton {
-  padding: 8px;
+  width: 110px;
+  padding: 3px;
   color: rgb(255, 255, 255);
   border: none;
+  height: 40px;
 }
 /* select room */
 #room_name {
@@ -111,6 +113,15 @@ body {
   padding: 5px 10px;
   color: #fff;
 }
+
+#room_mem{
+  display: none;
+}
+
+#room_mem li {
+  padding: 5px 10px;
+  color: #fff;
+}
 /* #online_user li:nth-child(odd) {
   background: #eee;
 } */
@@ -126,6 +137,14 @@ body {
 #refresh {
   color: rgb(240, 234, 183);
   background-color: rgb(56, 42, 107);
+  border: none;
+  height: 30px;
+  width: 100%;
+}
+
+#change{
+  color: rgb(240, 234, 183);
+  background-color: rgb(88, 71, 150);
   border: none;
   height: 30px;
   width: 100%;

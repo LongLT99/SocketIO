@@ -9,7 +9,7 @@ const localvideo = document.querySelector("video#local_video");
 const groupvideo = document.querySelector("video#local_vi");
 
 const peer = new Peer({ key: "lwjd5qra8257b9" });
-peer.on("open", function() {
+peer.on("open", function(){
   console.log(peer.id);
   socket.emit("peerID", {userId: socket.id , peerID: peer.id });
 });
@@ -55,7 +55,6 @@ $("#modal_id").on("hidden.bs.modal", function hidden_modal() {
 });
 
 // answer
-
 socket.on("answer_call", function(data, id) {
   $("#modalc").append(data.username + " is calling")
   if(checkCall ==true){
@@ -120,11 +119,10 @@ peer.on("call", function(call){
       call.close();
     });
   }else{
-        if (i<5){
+        if(i<5)
           i+=1;
-        }else{
+        else
           i=1;
-        }
         console.log(i);       
         addvideo(i);     
         openStream().then(stream => {
@@ -163,7 +161,7 @@ function openStream() {
 function playStream(idVideoTag, stream) {
   const video = document.getElementById(idVideoTag);
   console.log(video);
-  video.srcObject = stream; 
+  video.srcObject = stream;
   video.play();
 }
 

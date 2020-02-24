@@ -31,7 +31,7 @@
   <div class="row my-1">
     <div class="colum col-5">
       <input type="text" id="inputuse" class="col-9" placeholder="input your username">
-      <input type="button" id="buton" class="col-2  bg-primary" value="create user">
+      <input type="button" id="buton" class="col-2  bg-primary text-center" value="create user">
     </div>
     <div class="colum col-7">
       <input id="in_room" class="col-3" placeholder="input room's name">
@@ -56,11 +56,20 @@
     </div>
     <div class="colum col-4">
       <div id="onhead" class="card-header text-center">
-        Online user
+        <div class="row">
+          <div id="mem_title" class="colum col-9 text-center">
+            Online user
+          </div>
+          <div class="colum col-3">
+            <input type="button" id="change" value="room">
+          </div>
+        </div>
       </div>
       <div id="onbox" class="card-block">
         <ul id="online_user" class="list-group list-group-flush"></ul>
+        <ul id="room_mem" class="list-group list-group-flush"></ul>
       </div>
+
       <div id="inhead" class="card-header">
         <div class="row">
           <div class="colum col-9 text-center">
@@ -234,7 +243,7 @@
   </div>
 
   <script src="main.js"></script>
-  <script src="typing.js"></script>
+  <script src="room.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/peerjs@0.3.20/dist/peer.min.js"></script>
   <script src="client.js"></script>
   <script src="group.js"></script>
