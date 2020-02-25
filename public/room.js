@@ -26,11 +26,11 @@ $("#roomb").click(function() {
         }
 
       }
-      
+
     }
 
 });
-  
+
 socket.on('room_alert',function(room){
     $("#noname").modal();
     $("#alert_no").empty();
@@ -57,11 +57,14 @@ socket.on("list_yroom", function(room, namer){
   $("#room_name").val(namer);
 });
 
-socket.on("list_mem", function(MRoom){
+socket.on("list_mem", function(MRoom, host){
   $("#room_mem").empty();
-    for(x in MRoom){
+  $("#room_mem").append("<li>" + host + '   <img id="host_img" src="/img/crown.png" >');
+  for(x in MRoom){
+    if(x.localeCompare(host)!=0){
       $("#room_mem").append("<li>" + x);
     }
+  }
 });
 
 socket.on("list_room", function(room) {
@@ -101,23 +104,26 @@ $("#roomj").click(function() {//join room
 
 socket.on('new_mem_to_room', function(data){
   MRoom[data.memname] = data.memname;
-  socket.emit('send_info_to_room',MRoom);
+  socket.emit('send_info_to_room',MRoom, data.host);
 });
 
 socket.on('mem_out_room', function(data){
   delete MRoom[data.memname];
-  socket.emit('send_info_to_room',MRoom);
+  socket.emit('send_info_to_room',MRoom,data.host);
 });
 
-socket.on("host_out_room", function(old_host, MRoom){
+socket.on("host_out_room", function(old_host, MRoom, host){
   delete MRoom[old_host];
-  socket.emit('send_info_to_room',MRoom);
+  socket.emit('send_info_to_room',MRoom, host);
 })
 
-socket.on('get_from_host',function(MRoom){
+socket.on('get_from_host',function(MRoom, host){
   $("#room_mem").empty();
+  $("#room_mem").append("<li>" + host + '   <img id="host_img" src="/img/crown.png" >');
   for(x in MRoom){
-    $("#room_mem").append("<li>" + x);
+    if(x.localeCompare(host)!=0){
+      $("#room_mem").append("<li>" + x);
+    }
   }
 });
   
@@ -138,10 +144,22 @@ socket.on('change_host', function(host, room){
 
 $("#change").click(function(){
   if($("#change").val()=="room"){
+    // change tittle
+    $("#mem_title").empty();
+    $("#mem_title").append("Room members");
+    // change list
     $("#change").val("sever");
     $("#online_user").hide();
     $("#room_mem").show();
+    if($("#room_mem").val()=="" && $("#inname").html()!=null && $("#rname").html()==null){
+      $("#room_mem").empty();
+      $("#room_mem").append('<li class ="text-warning" > you not in any room yet !!!');
+    }
   }else{
+    // change tittle
+    $("#mem_title").empty();
+    $("#mem_title").append("Online user");
+    // change list
     $("#change").val("room");
     $("#room_mem").hide();
     $("#online_user").show();

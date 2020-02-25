@@ -122,6 +122,15 @@ body {
   padding: 5px 10px;
   color: #fff;
 }
+
+#host_img{
+  width: 6%;
+}
+
+#change_icon{
+  width: 30%;
+}
+
 /* #online_user li:nth-child(odd) {
   background: #eee;
 } */

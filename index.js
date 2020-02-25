@@ -32,9 +32,10 @@ io.on("connection", function(socket) {
     mem[socket.RoomName] -= 1;
     if(mem[socket.RoomName] != 0){
       if(host[socket.RoomName]==socket.username){
+        console.log("s1");        
         io.to(ID[host[socket.RoomName]]).emit('change_host',socket.username, socket.RoomName);
       }else{
-        io.to(ID[host[socket.RoomName]]).emit('mem_out_room',{ memname : socket.username});
+        io.to(ID[host[socket.RoomName]]).emit('mem_out_room',{ memname : socket.username, host : host[socket.RoomName]});
       }
     }
     delete_room(socket.RoomName);
@@ -77,7 +78,7 @@ io.on("connection", function(socket) {
         if(host[socket.RoomName]==socket.username){
           io.to(ID[host[socket.RoomName]]).emit('change_host',socket.username, socket.RoomName);
         }else{
-          io.to(ID[host[socket.RoomName]]).emit('mem_out_room',{ memname : socket.username});
+          io.to(ID[host[socket.RoomName]]).emit('mem_out_room',{ memname : socket.username, host : host[socket.RoomName]});
         }
       }
       //new room
@@ -87,7 +88,7 @@ io.on("connection", function(socket) {
       socket.join(data.roomName);
       host[data.roomName]= data.username;
       mem[socket.RoomName] = 1;
-      io.to(ID[host[data.roomName]]).emit("list_mem",data.MRoom);
+      io.to(ID[host[data.roomName]]).emit("list_mem",data.MRoom, data.username);
       socket.emit("list_yroom", room, socket.RoomName); // sending to sender
       socket.broadcast.emit("list_room", room); // sending to all clients except sender
     } else {
@@ -105,7 +106,7 @@ io.on("connection", function(socket) {
         if(host[socket.RoomName]==socket.username){
           io.to(ID[host[socket.RoomName]]).emit('change_host',socket.username, socket.RoomName);
         }else{
-          io.to(ID[host[socket.RoomName]]).emit('mem_out_room',{ memname : socket.username});
+          io.to(ID[host[socket.RoomName]]).emit('mem_out_room',{ memname : socket.username, host : host[socket.RoomName]});
         }
       }
       delete_room(socket.RoomName);
@@ -113,7 +114,7 @@ io.on("connection", function(socket) {
       socket.RoomName = data.roomName;
       socket.join(data.roomName);
       mem[socket.RoomName] += 1;
-      io.to(ID[host[data.roomName]]).emit('new_mem_to_room',{ memname : socket.username});
+      io.to(ID[host[data.roomName]]).emit('new_mem_to_room',{ memname : socket.username,host : host[data.roomName]});
       socket.emit("list_yroom", room, socket.RoomName); // sending to sender
       socket.broadcast.emit("list_room", room); // sending to all clients except sender
     } else {
@@ -126,12 +127,12 @@ io.on("connection", function(socket) {
   socket.on('new_host', function(new_host, h_room, old_host, MRoom){
     delete host[h_room];
     host[h_room] = new_host;
-    io.to(ID[host[h_room]]).emit('host_out_room', old_host, MRoom);
+    io.to(ID[host[h_room]]).emit('host_out_room', old_host, MRoom, new_host);
   });
 
-  socket.on('send_info_to_room',function(MRoom){
+  socket.on('send_info_to_room',function(MRoom, host){
     for(x in MRoom){
-      io.to(ID[x]).emit("get_from_host",MRoom);
+      io.to(ID[x]).emit("get_from_host", MRoom, host);
     }
   });
 
@@ -153,6 +154,7 @@ io.on("connection", function(socket) {
     }
   };
 
+  //INBOX
   socket.on("private message", function(toname, msg) {
     // send private message to target friend
     io.to(ID[socket.username]).emit(
@@ -167,10 +169,10 @@ io.on("connection", function(socket) {
     );
   });
 
+  //VIDEO CALL
   socket.on("peerID", function(id) {
     peer[id.userId] = id.peerID;
   });
-
   socket.on("calling", function(target, peerID) {
     //get peerid from the caller
     io.to(ID[target]).emit(
@@ -193,18 +195,6 @@ io.on("connection", function(socket) {
   socket.on("end_call", function(data) {
     io.to(ID[data.ended]).emit("end_noty", { endName: data.end });
   });
-  socket.on("typing", function(name, t) {
-    if (t == 1) {
-      socket.broadcast.emit("is_typing", name);
-    } else {
-      socket.broadcast.emit("is_not_typing", name);
-    }
-  });
-  socket.on("checktype", function(data) {
-    // call classification
-    const a = 1;
-    io.to(ID[data]).emit("gettype", a);
-  });
 
   var pname;
   var al_check;
@@ -225,6 +215,21 @@ io.on("connection", function(socket) {
     }
   });
 
+  //  TYPING
+  socket.on("typing", function(name, t) {
+    if (t == 1) {
+      socket.broadcast.emit("is_typing", name);
+    } else {
+      socket.broadcast.emit("is_not_typing", name);
+    }
+  });
+  socket.on("checktype", function(data) {
+    // call classification
+    const a = 1;
+    io.to(ID[data]).emit("gettype", a);
+  });
+
+  // ROOM MEMBER
   socket.on("new_mem", function(caller, newm) {
     pname = ID[newm];
     for (x in caller) {

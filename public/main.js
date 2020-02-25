@@ -8,10 +8,7 @@ $("form").submit(function(e) {
   if ($("#m").val() != "") {
     // not empty mess
     if ($("#chat-type option:selected").text() == "chat room") {
-      if (
-        $("#room_name option:selected").text() != "" &&
-        $("#rname").html() != ""
-      ) {
+      if ($("#room_name option:selected").text() != "" && $("#rname").html() != "" ) {
         e.preventDefault(); // prevents page reloading
         socket.emit("send_to_room", $("#m").val());
       } else {
@@ -136,23 +133,15 @@ socket.on("chat private", function(data, to) {
 var iconid = 128512;
 $("#icon_button").click(function() {
   while (iconid < 128592) {
-    $("#emoji").append(
-      '<button type="button" id="icon_' +
-        iconid +
-        '" class="btn btn-light" style="width:20%; font-size:x-large" onclick="pick_emoji(icon_' +
-        iconid +
-        ')">&#' +
-        iconid +
-        ";</button>"
-    );
+    $("#emoji").append('<button type="button" id="icon_' +
+      iconid +'" class="btn btn-light" style="width:20%; font-size:x-large" onclick="pick_emoji(icon_' +
+      iconid +')">&#'+ iconid +";</button>");
     iconid += 1;
   }
 });
 
 function pick_emoji(emoji) {
-  $("#m")
-    .val($("#m").val() + $(emoji).html())
-    .focus();
+  $("#m").val($("#m").val() + $(emoji).html()).focus();
 }
 
 //typing
