@@ -30,16 +30,17 @@ io.on("connection", function(socket) {
   io.emit("getID", ID);
   socket.on("disconnect", function() {
     mem[socket.RoomName] -= 1;
-    if(mem[socket.RoomName] != 0){
+    if(mem[socket.RoomName] > 0){
       if(host[socket.RoomName]==socket.username){
-        console.log("s1");        
-        io.to(ID[host[socket.RoomName]]).emit('change_host',socket.username, socket.RoomName);
+        console.log("s1");
+        io.to(room[socket.RoomName]).emit('change_host',socket.username, socket.RoomName);
       }else{
         io.to(ID[host[socket.RoomName]]).emit('mem_out_room',{ memname : socket.username, host : host[socket.RoomName]});
       }
     }
     delete_room(socket.RoomName);
-    io.emit("leave", socket.username, room);
+
+    io.emit("leave", socket.username, room);//update to list room
     delete list[socket.username];
     delete ID[socket.username];
     io.emit("update", list);
@@ -69,18 +70,21 @@ io.on("connection", function(socket) {
     ID[userName] = userId;
   });
 
+  //ROOM CHAT
   socket.on("setRoom", function(data) {
     if (room[data.roomName] == null) {//usename is not taken
       // old room
       if(socket.roomName!="guest")
         mem[socket.RoomName] -= 1;
-      if(mem[socket.RoomName] != 0){
+      if(mem[socket.RoomName] > 0){      
         if(host[socket.RoomName]==socket.username){
+          console.log("s2");
           io.to(ID[host[socket.RoomName]]).emit('change_host',socket.username, socket.RoomName);
         }else{
           io.to(ID[host[socket.RoomName]]).emit('mem_out_room',{ memname : socket.username, host : host[socket.RoomName]});
         }
       }
+      delete_room(socket.RoomName);
       //new room
       socket.RoomName = data.roomName;
       room[data.roomName] = data.roomName;
@@ -88,7 +92,7 @@ io.on("connection", function(socket) {
       socket.join(data.roomName);
       host[data.roomName]= data.username;
       mem[socket.RoomName] = 1;
-      io.to(ID[host[data.roomName]]).emit("list_mem",data.MRoom, data.username);
+      io.to(ID[host[data.roomName]]).emit("list_mem",data.MRoom, data.username, data.checkout);
       socket.emit("list_yroom", room, socket.RoomName); // sending to sender
       socket.broadcast.emit("list_room", room); // sending to all clients except sender
     } else {
@@ -102,8 +106,9 @@ io.on("connection", function(socket) {
       //old room
       if(socket.roomName!="guest")
         mem[socket.RoomName] -= 1;
-      if(mem[socket.RoomName] != 0){
+      if(mem[socket.RoomName] > 0){
         if(host[socket.RoomName]==socket.username){
+          console.log("s3");
           io.to(ID[host[socket.RoomName]]).emit('change_host',socket.username, socket.RoomName);
         }else{
           io.to(ID[host[socket.RoomName]]).emit('mem_out_room',{ memname : socket.username, host : host[socket.RoomName]});
@@ -124,13 +129,15 @@ io.on("connection", function(socket) {
     }
   });
 
-  socket.on('new_host', function(new_host, h_room, old_host, MRoom){
-    delete host[h_room];
-    host[h_room] = new_host;
-    io.to(ID[host[h_room]]).emit('host_out_room', old_host, MRoom, new_host);
+  socket.on('new_host', function(new_host, in_room, old_host, MRoom){
+    delete host[in_room];
+    host[in_room] = new_host;
+    io.to(ID[host[in_room]]).emit('host_out_room', old_host, MRoom, new_host);
   });
 
+  //SEND MESSAGE
   socket.on('send_info_to_room',function(MRoom, host){
+    console.log(MRoom);
     for(x in MRoom){
       io.to(ID[x]).emit("get_from_host", MRoom, host);
     }
@@ -146,13 +153,6 @@ io.on("connection", function(socket) {
     socket.emit("chat_all", { msg: msg, username: socket.username });
     socket.broadcast.emit("chat_all", { msg: msg, username: socket.username });
   });
-
-  function delete_room(name) {
-    if (mem[name] == 0) {
-      delete room[name];
-      socket.emit("list_room", room);
-    }
-  };
 
   //INBOX
   socket.on("private message", function(toname, msg) {
@@ -229,7 +229,7 @@ io.on("connection", function(socket) {
     io.to(ID[data]).emit("gettype", a);
   });
 
-  // ROOM MEMBER
+  // GROUP CALL MEMBER 
   socket.on("new_mem", function(caller, newm) {
     pname = ID[newm];
     for (x in caller) {
@@ -247,6 +247,13 @@ io.on("connection", function(socket) {
       }
     }
   });
+
+  function delete_room(name) {
+    if (mem[name] == 0) {
+      delete room[name];
+      socket.emit("list_room", room);
+    }
+  };
 });
 
 http.listen(process.env.PORT || 3000, function() {

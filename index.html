@@ -22,9 +22,8 @@
       <h1 class="align-middle">Ocean box chat</h1>
       <div id="nameroom" class="row center">
         <h4 id="info" class="center">User name: </h4>
-        <h4 class="center" id="room_info">Room :</h4>
+        <h4 class="center" id="room_info">Room : </h4>
       </div>
-
     </span>
   </nav>
   <!-- create user and room -->
@@ -36,10 +35,11 @@
     <div class="colum col-7">
       <input id="in_room" class="col-3" placeholder="input room's name">
       <input type="button" id="roomb" class="col-2 bg-primary text-center" value="create room">
-      <select id="room_name" class="col-4" placeholder="room name">
-        <option value="" hidden>Available room</option>
+      <select id="room_name" class="col-3" placeholder="room name">
+        <option value="" hidden>room list</option>
       </select>
       <input type="button" id="roomj" class="col-2 bg-primary text-center" value="join room">
+      <input type="button" id="host_room" class="col-1 btn btn-warning text-center" data-toggle="tooltip" data-placement="top" title="room management" value="Host">
     </div>
   </div>
 
@@ -233,10 +233,9 @@
             </select>
           </div>
           <input type="text"  id="m" autocomplete="off" aria-describedby="inputGroupPrepend2" required>
-          <button type="button" id="send_button"><img id="send_icon" src="/img/email.png" class="center"></button>
-        <button type="button" id="video_button"><img id="vcall_icon" src="/img/communications.png"
-            class="center"></button>
-        <button type="button" id="group"><img id="game_icon" src="/img/video-chat.png" class="center"></button>
+          <button type="button" id="send_button" data-toggle="tooltip" data-placement="top" title="send message"><img id="send_icon" src="/img/email.png" class="center" ></button>
+        <button type="button" id="video_button" data-toggle="tooltip" data-placement="top" title="video call"><img id="vcall_icon" src="/img/communications.png" class="center"></button>
+        <button type="button" id="group" data-toggle="tooltip" data-placement="top" title="group call"><img id="game_icon" src="/img/video-chat.png" class="center"></button>
         </div>
       </div>
     </form>
@@ -244,6 +243,7 @@
 
   <script src="main.js"></script>
   <script src="room.js"></script>
+  <script src="host.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/peerjs@0.3.20/dist/peer.min.js"></script>
   <script src="client.js"></script>
   <script src="group.js"></script>

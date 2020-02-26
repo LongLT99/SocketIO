@@ -310,3 +310,10 @@ div.dropdown-menu.show{
   margin-right: 10px;
   height: 25px;
 }
+
+#host_room{
+  display: none;
+  padding: 8px;
+  color: rgb(255, 255, 255);
+  border: none;
+}

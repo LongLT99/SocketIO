@@ -1,5 +1,6 @@
 var MRoom = {};
 var host_check;
+var checkout;
 //create room
 $("#roomb").click(function() {
     if($('#inname').html()==null){// no username error
@@ -13,11 +14,15 @@ $("#roomb").click(function() {
         $("#alert_no").empty();
         $("#alert_no").append("please enter room's name");
       }else {
-
         var pass = prompt("enter your room password");
-        if(pass!=null && pass!=""){//ok
+        if(pass!=null && pass!=""){//ok    
+          if($("#rname").html()==null){
+            checkout=0;
+          }else{
+            checkout=1;
+          }
           MRoom[$("#inname").html().trim()]=$("#inname").html().trim();
-          socket.emit("setRoom", { roomName: $("#in_room").val(), username: $("#inname").html().trim(), pass_room : pass, MRoom});//sending room password
+          socket.emit("setRoom", { roomName: $("#in_room").val(), username: $("#inname").html().trim(), pass_room : pass, MRoom, checkout});//sending room password
           $("#in_room").val("");
         }else{//cancer
           $("#noname").modal();
@@ -57,16 +62,6 @@ socket.on("list_yroom", function(room, namer){
   $("#room_name").val(namer);
 });
 
-socket.on("list_mem", function(MRoom, host){
-  $("#room_mem").empty();
-  $("#room_mem").append("<li>" + host + '   <img id="host_img" src="/img/crown.png" >');
-  for(x in MRoom){
-    if(x.localeCompare(host)!=0){
-      $("#room_mem").append("<li>" + x);
-    }
-  }
-});
-
 socket.on("list_room", function(room) {
   //up date room name
   $("#room_name").focus(function(){
@@ -101,45 +96,11 @@ $("#roomj").click(function() {//join room
     }
   }
 });
-
-socket.on('new_mem_to_room', function(data){
-  MRoom[data.memname] = data.memname;
-  socket.emit('send_info_to_room',MRoom, data.host);
-});
-
-socket.on('mem_out_room', function(data){
-  delete MRoom[data.memname];
-  socket.emit('send_info_to_room',MRoom,data.host);
-});
-
-socket.on("host_out_room", function(old_host, MRoom, host){
-  delete MRoom[old_host];
-  socket.emit('send_info_to_room',MRoom, host);
-})
-
-socket.on('get_from_host',function(MRoom, host){
-  $("#room_mem").empty();
-  $("#room_mem").append("<li>" + host + '   <img id="host_img" src="/img/crown.png" >');
-  for(x in MRoom){
-    if(x.localeCompare(host)!=0){
-      $("#room_mem").append("<li>" + x);
-    }
-  }
-});
   
 socket.on('join_alert',function(data){
   $("#noname").modal();
   $("#alert_no").empty();
   $("#alert_no").append("wrong password of room : "+data.room_name);
-});
-
-socket.on('change_host', function(host, room){
-  for(x in MRoom){
-    if(x.localeCompare(host)!=0){
-      socket.emit("new_host", x, room, host, MRoom);
-      break;
-    }
-  }
 });
 
 $("#change").click(function(){
