@@ -60,11 +60,6 @@ socket.on("host_out_room", function(old_host, MemList, host){
     socket.emit('send_info_to_room',MRoom, host);
 });
 
-$("#alert_su").on("hidden.bs.modal", function hidden_modal() {
-    $("#room_name").focus(function(){
-        $("#room_name").empty();
-        $.each(room, function(rname) {
-          $("#room_name").append("<option>" + rname + "</option>");
-        });
-      });
+$("#host_room").click(function(){
+    $("#modal_h").modal();
 });

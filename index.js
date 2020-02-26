@@ -30,7 +30,6 @@ io.on("connection", function(socket) {
   io.emit("getID", ID);
   socket.on("disconnect", function() {
     mem[socket.RoomName] -= 1;
-    console.log(mem[socket.RoomName]);
     if(mem[socket.RoomName] > 0){
       if(host[socket.RoomName]==socket.username){
         io.to(room[socket.RoomName]).emit('change_host',socket.username, socket.RoomName);
@@ -40,8 +39,6 @@ io.on("connection", function(socket) {
     }
     delete_room(socket.RoomName);
     io.emit("leave", socket.username, room);//update to list room
-    console.log("aasdfsd");
-    
     delete list[socket.username];
     delete ID[socket.username];
     io.emit("update", list);
@@ -247,7 +244,6 @@ io.on("connection", function(socket) {
   });
 
   function delete_room(name) {
-    console.log(mem[name]);
     if (mem[name] == 0) {
       delete room[name];
       socket.emit("list_room", room);

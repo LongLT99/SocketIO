@@ -54,7 +54,6 @@ $("#buton").click(function() {
 });
 
 socket.on("change_user", function(data) {
-  $("#buton").val("change name")
   $("#messages").append("<li>" + data.user + " is connect"); // connected user notication
   socket.on("update", function(list) {
     // update online user
