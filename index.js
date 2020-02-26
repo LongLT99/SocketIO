@@ -129,10 +129,10 @@ io.on("connection", function(socket) {
     }
   });
 
-  socket.on('new_host', function(new_host, in_room, old_host, MRoom){
+  socket.on('new_host', function(new_host, in_room, old_host, MemList){
     delete host[in_room];
     host[in_room] = new_host;
-    io.to(ID[host[in_room]]).emit('host_out_room', old_host, MRoom, new_host);
+    io.to(ID[host[in_room]]).emit('host_out_room', old_host, MemList, new_host);
   });
 
   //SEND MESSAGE

@@ -18,7 +18,6 @@ socket.on("list_mem", function(MRoom, host, checkout){
 });
 
 socket.on('new_mem_to_room', function(data){
-    console.log(MRoom);
     MRoom[data.memname] = data.memname;
     socket.emit('send_info_to_room',MRoom, data.host);
 });
@@ -27,7 +26,6 @@ var MemList = {};
 socket.on('get_from_host',function(MRoom, host){
     console.log(MRoom);
     MemList = MRoom;
-    console.log(MemList);
     $("#room_mem").empty();
     $("#room_mem").append("<li>" + host + '   <img id="host_img" src="/img/crown.png" >');
     for(x in MemList){
@@ -44,9 +42,6 @@ socket.on('mem_out_room', function(data){
 
 socket.on('change_host', function(host, room){
     $("#host_room").hide();
-    console.log(MemList);
-    // delete MemList[host];
-    // MRoom = MemList;
     for(x in MemList){
       if(x.localeCompare(host)!=0){
         socket.emit("new_host", x, room, host, MemList);
@@ -55,7 +50,10 @@ socket.on('change_host', function(host, room){
     }
 });
 
-socket.on("host_out_room", function(old_host, MRoom, host){
+socket.on("host_out_room", function(old_host, MemList, host){
+    $("#success").modal();
+    $("#alert_su").empty();
+    $("#alert_su").append("now you are host !!!");//change host success
     $("#host_room").show();
     MRoom = MemList;
     delete MRoom[old_host];
