@@ -1,5 +1,4 @@
 socket.on("list_mem", function(MRoom, host, checkout){
-    console.log(checkout);
     if(checkout==0){
       $("#host_room").show();
       $("#room_mem").empty();
@@ -10,10 +9,11 @@ socket.on("list_mem", function(MRoom, host, checkout){
         }
       }
     }else{
-      MRoom ={};
-      MRoom[host]= host;
-      $("#room_mem").empty();
-      $("#room_mem").append("<li>" + host + '   <img id="host_img" src="/img/crown.png" >');
+        $("#host_room").show();
+        MRoom ={};
+        MRoom[host]= host;
+        $("#room_mem").empty();
+        $("#room_mem").append("<li>" + host + '   <img id="host_img" src="/img/crown.png" >');
     }
 });
 
@@ -24,7 +24,7 @@ socket.on('new_mem_to_room', function(data){
 
 var MemList = {};
 socket.on('get_from_host',function(MRoom, host){
-    console.log(MRoom);
+    console.log(MRoom);// ko xoa
     MemList = MRoom;
     $("#room_mem").empty();
     $("#room_mem").append("<li>" + host + '   <img id="host_img" src="/img/crown.png" >');
@@ -58,4 +58,13 @@ socket.on("host_out_room", function(old_host, MemList, host){
     MRoom = MemList;
     delete MRoom[old_host];
     socket.emit('send_info_to_room',MRoom, host);
+});
+
+$("#alert_su").on("hidden.bs.modal", function hidden_modal() {
+    $("#room_name").focus(function(){
+        $("#room_name").empty();
+        $.each(room, function(rname) {
+          $("#room_name").append("<option>" + rname + "</option>");
+        });
+      });
 });

@@ -30,17 +30,18 @@ io.on("connection", function(socket) {
   io.emit("getID", ID);
   socket.on("disconnect", function() {
     mem[socket.RoomName] -= 1;
+    console.log(mem[socket.RoomName]);
     if(mem[socket.RoomName] > 0){
       if(host[socket.RoomName]==socket.username){
-        console.log("s1");
         io.to(room[socket.RoomName]).emit('change_host',socket.username, socket.RoomName);
       }else{
         io.to(ID[host[socket.RoomName]]).emit('mem_out_room',{ memname : socket.username, host : host[socket.RoomName]});
       }
     }
     delete_room(socket.RoomName);
-
     io.emit("leave", socket.username, room);//update to list room
+    console.log("aasdfsd");
+    
     delete list[socket.username];
     delete ID[socket.username];
     io.emit("update", list);
@@ -78,7 +79,6 @@ io.on("connection", function(socket) {
         mem[socket.RoomName] -= 1;
       if(mem[socket.RoomName] > 0){      
         if(host[socket.RoomName]==socket.username){
-          console.log("s2");
           io.to(ID[host[socket.RoomName]]).emit('change_host',socket.username, socket.RoomName);
         }else{
           io.to(ID[host[socket.RoomName]]).emit('mem_out_room',{ memname : socket.username, host : host[socket.RoomName]});
@@ -108,7 +108,6 @@ io.on("connection", function(socket) {
         mem[socket.RoomName] -= 1;
       if(mem[socket.RoomName] > 0){
         if(host[socket.RoomName]==socket.username){
-          console.log("s3");
           io.to(ID[host[socket.RoomName]]).emit('change_host',socket.username, socket.RoomName);
         }else{
           io.to(ID[host[socket.RoomName]]).emit('mem_out_room',{ memname : socket.username, host : host[socket.RoomName]});
@@ -137,7 +136,6 @@ io.on("connection", function(socket) {
 
   //SEND MESSAGE
   socket.on('send_info_to_room',function(MRoom, host){
-    console.log(MRoom);
     for(x in MRoom){
       io.to(ID[x]).emit("get_from_host", MRoom, host);
     }
@@ -249,6 +247,7 @@ io.on("connection", function(socket) {
   });
 
   function delete_room(name) {
+    console.log(mem[name]);
     if (mem[name] == 0) {
       delete room[name];
       socket.emit("list_room", room);
