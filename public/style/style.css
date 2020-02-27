@@ -317,3 +317,9 @@ div.dropdown-menu.show{
   color: rgb(255, 255, 255);
   border: none;
 }
+
+#host_body{
+  overflow-y: scroll;
+  height: 158px;
+  padding: 0px;
+}

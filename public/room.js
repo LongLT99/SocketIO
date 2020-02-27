@@ -60,6 +60,8 @@ socket.on("list_yroom", function(room, namer){
   $("#room_info").append('<span id ="rname"> '+ namer +'</span>');
   $("#room_name").append("<option>" + namer + "</option>");
   $("#room_name").val(namer);
+  $("#h_r_name").empty();
+  $("#h_r_name").append('Room name: '+ namer);
 });
 
 socket.on("list_room", function(room) {
@@ -116,6 +118,7 @@ $("#change").click(function(){
       $("#room_mem").empty();
       $("#room_mem").append('<li class ="text-warning" > you not in any room yet !!!');
     }
+    
   }else{
     // change tittle
     $("#mem_title").empty();

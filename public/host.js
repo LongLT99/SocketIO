@@ -8,12 +8,23 @@ socket.on("list_mem", function(MRoom, host, checkout){
           $("#room_mem").append("<li>" + x);
         }
       }
+      //host mana
+      $("#host_body").empty();
+      $("#host_body").append('<a href="#" class="list-group-item list-group-item-action">'+host+ '   <img id="host_img" src="/img/crown.png" ></a>');
+      for(x in MRoom){
+        if(x.localeCompare(host)!=0){
+          $("#host_body").append('<a href="#" class="list-group-item list-group-item-action">'+x+'</a>');
+        }
+      }
     }else{
         $("#host_room").show();
         MRoom ={};
         MRoom[host]= host;
         $("#room_mem").empty();
         $("#room_mem").append("<li>" + host + '   <img id="host_img" src="/img/crown.png" >');
+        //host mana
+        $("#host_body").empty();
+        $("#host_body").append('<a href="#" class="list-group-item list-group-item-action">'+host+ '   <img id="host_img" src="/img/crown.png" ></a>');
     }
 });
 
@@ -31,6 +42,14 @@ socket.on('get_from_host',function(MRoom, host){
     for(x in MemList){
       if(x.localeCompare(host)!=0){
         $("#room_mem").append("<li>" + x);
+      }
+    }
+
+    $("#host_body").empty();
+    $("#host_body").append('<a href="#" class="list-group-item list-group-item-action">'+host+ '   <img id="host_img" src="/img/crown.png" ></a>');
+    for(x in MRoom){
+      if(x.localeCompare(host)!=0){
+        $("#host_body").append('<a href="#" class="list-group-item list-group-item-action">'+x+'</a>');
       }
     }
 });
